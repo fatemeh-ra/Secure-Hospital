@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Send Query </title>
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/Query.css">
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="js/home.js"></script>
+  
+
+
+</head>
+<body>
+    <div class="nav">
+        <ul>
+          <li style="color: lavender; font-family:  'Roboto Condensed', sans-serif;">Wellcome</li>
+        </ul>
+      </div>
+      <div style="padding-left:100px ; padding-top:20px ; ">
+        <div id="userinfo">
+          <center style="font-family: 'Roboto Condensed', sans-serif ; padding-top: 10px;">Hello .......</center>
+        </div>  
+       
+      </div>
+      
+      
+      <center style="padding-top: 50px;">
+
+        <div class="card card-4">
+          <center style="font-family: 'Roboto Condensed', sans-serif ;padding-top: 20px; font-size: 150%;">write and Send your Query , moreever you can select query type for more convenience  </center>
+
+          <div class="search-wrapper">
+            <form>
+            <input  type="text" name="focus" required class="search-box" id="q" placeholder="Enter search term" />
+              <button class="close-icon" type="reset"></button>
+              <select name="points" id="points">
+                <option value="p1">p1</option>
+                <option value="p2">p1</option>
+                <option value="p3">p1</option>
+                <option value="p4">p1</option>
+              </select>
+              <center style="padding-top: 20px;"> 
+                <button class="submitbtn" id="Search"> Send Query</button>
+
+              </center>
+
+            </form>
+          </div>
+          <div id="queries">
+
+
+            <div class="heart-rate">
+              <svg version="1.0" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="150px" height="73px" viewBox="0 0 150 73" enable-background="new 0 0 150 73" xml:space="preserve">
+                <polyline fill="none" stroke="#e60000" stroke-width="3" stroke-miterlimit="10" points="0,45.486 38.514,45.486 44.595,33.324 50.676,45.486 57.771,45.486 62.838,55.622 71.959,9 80.067,63.729 84.122,45.486 97.297,45.486 103.379,40.419 110.473,45.486 150,45.486"
+                />
+              </svg>
+              <div class="fade-in"></div>
+              <div class="fade-out"></div>
+            </div>
+
+            <button class="Btn2" id="MYPrivacy"> MY-Privacy </button>
+    <button class="Btn2" id="InsertINTable"> Insert </button>
+
+          
+          </div>
+        </div>
+       
+      </center>
+
+    <center>
+      <button class="Btn1" id="update"> Update </button>
+  
+    <button class="Btn1" id="select"> Select </button>
+    <button class="Btn1" id="insert"> Insert </button>
+    </center>
+    
+      </body>
+</html>
