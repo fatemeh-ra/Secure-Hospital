@@ -1,4 +1,7 @@
 
+-- q1
+-- Triggers in Triggers.sql
+
 -- q2
 -- Valid Targets
 select target_type from target_assignment where subject_id = 1
@@ -25,8 +28,7 @@ select subject_id, access_type, target from access_log a
 where a.object_id = 1
 
 -- q6
--- test data
-
+-- test data in data.sql
 
 -- q7
 create or replace function add_report(subject_id integer, object_id integer, detail varchar(255))
@@ -43,6 +45,7 @@ begin
 	select max(object_id), subject_id, detail from objects;
 end
 $$ LANGUAGE plpgsql;
+
 
 -- q8
 -- Login
@@ -79,7 +82,7 @@ $$ LANGUAGE plpgsql;
 
 -- q10
 -- LOGGING
-
+-- TODO
 
 
 

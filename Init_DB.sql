@@ -12,6 +12,7 @@
 --drop table subject_category;
 --drop table object_category;
 --drop table object_targets;
+--drop table Access_log;
 --drop table Sections;
 --drop table Subjects;
 --drop table objects;
@@ -23,7 +24,7 @@ create table Sections(
 
 create table Subjects(
 	subject_id serial primary key,
-	role varchar(10) not null check (role in ('doctor', 'nurse', 'employee', 'patient')),
+	role varchar(10) check (role in ('doctor', 'nurse', 'employee', 'patient')),
 	ASL varchar(5) not null check (ASL in ('TS', 'S', 'C', 'U')), -- Absolute
 	RSL varchar(5) not null check (RSL in ('TS', 'S', 'C', 'U')), -- Read
 	WSL varchar(5) not null check (WSL in ('TS', 'S', 'C', 'U')), -- Write
