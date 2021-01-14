@@ -2,20 +2,19 @@
 --drop table manager;
 --drop table administrative_assistant;
 --drop table medical_assistant;
---drop table login_patients;
---drop table login_personel;
---drop table reports_patients;
---drop table reports_personel;
+--drop table reports;
 --drop table target_assignment;
---drop table patient_targets;
 --drop table section_manager;
 --drop table patients;
 --drop table Doctors;
 --drop table Nurses;
 --drop table Employees;
---drop table category;
+--drop table subject_category;
+--drop table object_category;
+--drop table object_targets;
 --drop table Sections;
---drop table all_personels;
+--drop table Subjects;
+--drop table objects;
 
 create table Sections(
 	section_id INT not null PRIMARY KEY,
@@ -23,7 +22,7 @@ create table Sections(
 );
 
 create table Subjects(
-	subject_id INT primary key,
+	subject_id serial primary key,
 	role varchar(10) not null check (role in ('doctor', 'nurse', 'employee', 'patient')),
 	ASL varchar(5) not null check (ASL in ('TS', 'S', 'C', 'U')), -- Absolute
 	RSL varchar(5) not null check (RSL in ('TS', 'S', 'C', 'U')), -- Read
@@ -33,7 +32,7 @@ create table Subjects(
 );
 
 create table Objects(
-	object_id INT not null  primary key,
+	object_id serial not null  primary key,
 	ASL varchar(5) not null check (ASL in ('TS', 'S', 'C', 'U')),
 	MSL varchar(5) not null check (MSL in ('TS', 'S', 'C', 'U')),
 	CSL varchar(5) not null check (CSL in ('TS', 'S', 'C', 'U'))
@@ -59,10 +58,10 @@ CREATE TABLE Doctors(
 	l_name VARCHAR (255) NOT null,
 	national_id INT UNIQUE NOT null,
 	specialty VARCHAR (255) NOT null,
-	section_id INT references sections(section_id),
-	employment_date DATE not null,
+	section_id INT not null references sections(section_id),
+	employment_date DATE,
 	age INT,
-	salary INT not null,
+	salary INT,
 	marital_status varchar(8) check (marital_status in ('married', 'single'))
 );
 
@@ -151,6 +150,17 @@ create table Reports(
 	object_id int not null references Objects(object_id),
 	detail varchar(255)
 );
+
+create table Access_Log(
+	index serial not null primary key,
+	subject_id INT not null references Subjects(subject_id),
+	object_id int not null references Objects(object_id),
+	access_type varchar(20) check (access_type in ('read', 'write')),
+	target varchar(255)
+);
+
+
+
 
 
 
