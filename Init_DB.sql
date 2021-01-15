@@ -1,49 +1,75 @@
+--drop table system_manager;
+--drop table manager;
+--drop table administrative_assistant;
+--drop table medical_assistant;
+--drop table reports;
+--drop table target_assignment;
 --drop table section_manager;
---drop table patient;
+--drop table patients;
 --drop table Doctors;
 --drop table Nurses;
 --drop table Employees;
+--drop table subject_category;
+--drop table object_category;
+--drop table object_targets;
+--drop table Access_log;
 --drop table Sections;
+--drop table Subjects;
+--drop table objects;
 
 create table Sections(
 	section_id INT not null PRIMARY KEY,
 	section_name VARCHAR (255) UNIQUE NOT null
 );
 
-create table All_personels(
-	personel_id INT primary key,
-	role varchar(10) not null check (role in ('doctor', 'nurse', 'employee')),
-	subject_ASL varchar(5) not null check (subject_ASL in ('TS', 'S', 'C', 'U')), -- Absolute
-	subject_RSL varchar(5) not null check (subject_RSL in ('TS', 'S', 'C', 'U')), -- Read
-	subject_WSL varchar(5) not null check (subject_WSL in ('TS', 'S', 'C', 'U')), -- Write
-	object_ASL varchar(5) not null check (object_ASL in ('TS', 'S', 'C', 'U')),
-	object_RSL varchar(5) not null check (object_RSL in ('TS', 'S', 'C', 'U')),
-	object_WSL varchar(5) not null check (object_WSL in ('TS', 'S', 'C', 'U'))
+create table Subjects(
+	subject_id serial primary key,
+	role varchar(10) check (role in ('doctor', 'nurse', 'employee', 'patient')),
+	ASL varchar(5) not null check (ASL in ('TS', 'S', 'C', 'U')), -- Absolute
+	RSL varchar(5) not null check (RSL in ('TS', 'S', 'C', 'U')), -- Read
+	WSL varchar(5) not null check (WSL in ('TS', 'S', 'C', 'U')), -- Write
+	user_name varchar(255) not null,
+	password varchar(255) not null
 );
 
-create table Category(
-	subject_id INT not null references All_personels(personel_id),
+create table Objects(
+	object_id serial not null  primary key,
+	ASL varchar(5) not null check (ASL in ('TS', 'S', 'C', 'U')),
+	MSL varchar(5) not null check (MSL in ('TS', 'S', 'C', 'U')),
+	CSL varchar(5) not null check (CSL in ('TS', 'S', 'C', 'U'))
+);
+
+create table Subject_Category(
+	subject_id INT not null references Subjects(subject_id),
 	section_id INT not null references Sections(section_id),
 	primary key(subject_id, section_id)
 );
 
+create table Object_Category(
+	object_id INT not null references Objects(object_id),
+	section_id INT not null references Sections(section_id),
+	primary key(object_id, section_id)
+);
+
 
 CREATE TABLE Doctors(
-	personel_id INT not null PRIMARY key references All_personels(personel_id),
+	subject_id int not null primary key references subjects(subject_id),
+	object_id int not null references Objects(object_id),
 	f_name VARCHAR (255) NOT null,
 	l_name VARCHAR (255) NOT null,
 	national_id INT UNIQUE NOT null,
 	specialty VARCHAR (255) NOT null,
-	section_id INT references sections(section_id),
-	employment_date DATE not null,
+	section_id INT not null references sections(section_id),
+	employment_date DATE,
 	age INT,
-	salary INT not null,
+	salary INT,
 	marital_status varchar(8) check (marital_status in ('married', 'single'))
 );
 
 
 CREATE TABLE Nurses(
-	personel_id INT not null PRIMARY key references All_personels(personel_id),
+	subject_id int not null primary key references subjects(subject_id),
+	object_id int not null references Objects(object_id),
 	f_name VARCHAR (255) NOT null,
 	l_name VARCHAR (255) NOT null,
 	national_id INT UNIQUE NOT null,
@@ -56,7 +82,8 @@ CREATE TABLE Nurses(
 
 
 CREATE table Employees(
-	personel_id INT not null PRIMARY key references All_personels(personel_id),
+	subject_id int not null primary key references subjects(subject_id),
+	object_id int not null references Objects(object_id),
 	f_name VARCHAR (255) NOT null,
 	l_name VARCHAR (255) NOT null,
 	national_id INT UNIQUE NOT null,
@@ -70,6 +97,8 @@ CREATE table Employees(
 
 CREATE TABLE Patients(
 	registeration_id INT not null PRIMARY key,
+	subject_id int not null references subjects(subject_id),
+	object_id int not null references Objects(object_id),
 	f_name VARCHAR (255) UNIQUE NOT null,
 	l_name VARCHAR (255) UNIQUE NOT null,
 	national_id INT UNIQUE NOT null,
@@ -78,67 +107,61 @@ CREATE TABLE Patients(
 	illness VARCHAR (255),
 	section_id INT not null references Sections(section_id),
 	drugs VARCHAR (255),
-	doctor_id INT not null references Doctors(personel_id),
-	nurse_id INT not null references Nurses(personel_id)
+	doctor_id INT not null references Doctors(subject_id),
+	nurse_id INT not null references Nurses(subject_id)
 );
-
 
 create table Section_Manager(
 	section_id INT not null references Sections(section_id),
-	manager_id INT not null references Doctors(personel_id),
+	manager_id INT not null references Doctors(subject_id),
 	primary key(section_id, manager_id)
 );
 
 create table Manager(
-	manager_id int not null references Doctors(personel_id)
+	manager_id int not null references Doctors(subject_id)
 );
 
 create table System_Manager(
-	manager_id int not null references Employees(personel_id)
+	manager_id int not null references Employees(subject_id)
 );
 
 create table Administrative_assistant(
-	assistant_id int not null references Doctors(personel_id)
+	assistant_id int not null references Doctors(subject_id)
 );
 
 create table Medical_assistant(
-	assistant_id int not null references Doctors(personel_id)
+	assistant_id int not null references Doctors(subject_id)
 );
 
 create table Target_assignment(
 	target_id serial not null primary key,
 	target_type varchar(20) not null, -- check (target_type in ('')) TODO
-	subject_id int not null references All_personels(personel_id)
+	subject_id int not null references Subjects(subject_id)
 );
 
-create table Patient_Targets(
+create table Object_Targets(
 	target_id serial not null primary key,
 	target_type varchar(20) not null, -- check (target_type in ('')) TODO
-	subject_id int not null references Patients(registeration_id)
+	object_id int not null references Objects(object_id)
 );
 
-create table Login_personel(
-	user_name varchar(255) not null primary key,
-	password varchar(255) not null,
-	register_id int not null references All_personels(personel_id)
-);
-
-create table Reports_personel(
+create table Reports(
 	report_id serial not null primary key,
-	reporter_id int not null references All_personels(personel_id),
+	reporter_id int not null references Subjects(subject_id),
+	object_id int not null references Objects(object_id),
 	detail varchar(255)
 );
 
-create table Login_patients(
-	user_name varchar(255) not null primary key,
-	password varchar(255) not null,
-	register_id int not null references Patients(registeration_id)
+create table Access_Log(
+	index serial not null primary key,
+	subject_id INT not null references Subjects(subject_id),
+	object_id int not null references Objects(object_id),
+	access_type varchar(20) check (access_type in ('read', 'write')),
+	target varchar(255)
 );
 
-create table Reports_patients(
-	report_id serial not null primary key,
-	reporter_id int not null references Patients(registeration_id),
-	detail varchar(255)
-);
+
+
+
 
 
