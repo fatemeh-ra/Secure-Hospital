@@ -1,0 +1,172 @@
+
+
+body{
+
+    font-family: 'Roboto Condensed', sans-serif ;
+}
+h3{
+   
+    font-size: 25pt;         
+    font-style: normal; 
+    font-weight: bold; 
+    color:#454647;
+     
+  }
+
+
+
+
+  .t_form{
+    background: #454647;
+    display: inline-block;
+
+    border-radius: 20px;
+    margin: 10px;
+  }
+
+  input{
+      border-radius: 5px;
+  }
+  textarea{
+      border-radius: 5px;
+  }
+
+
+
+
+  td{
+      color:cornsilk;
+  }
+
+
+
+  .headers {
+   
+    display:inline-block;
+    overflow:hidden;
+    white-space:nowrap;
+    text-align: center;
+    padding-top: 0px;
+  }
+  
+  .headers:first-of-type {    /* For increasing performance 
+                         ID/Class should've been used. 
+                         For a small demo 
+                         it's okaish for now */
+    animation: showup 7s infinite;
+  }
+  
+  .headers:last-of-type {
+    width:0px;
+    animation: reveal 7s infinite;
+  }
+  
+  .headers:last-of-type span {
+    margin-left:-355px;
+    animation: slidein 7s infinite;
+  }
+  
+  @keyframes showup {
+      0% {opacity:0;}
+      20% {opacity:1;}
+      80% {opacity:1;}
+      100% {opacity:0;}
+  }
+  
+  @keyframes slidein {
+      0% { margin-left:-800px; }
+      20% { margin-left:-800px; }
+      35% { margin-left:0px; }
+      100% { margin-left:0px; }
+  }
+  
+  @keyframes reveal {
+      0% {opacity:0;width:0px;}
+      20% {opacity:1;width:0px;}
+      30% {width:355px;}
+      80% {opacity:1;}
+      100% {opacity:0;width:355px;}
+  }
+  
+  
+
+
+  .nav {
+      
+    background: rgb(2,2,3);
+    background: radial-gradient(circle, rgb(63, 141, 177) 30%, rgb(0, 0, 0) 100%,  rgb(63, 141, 177) 30%);
+    height: 60px; 
+  }
+  
+  .nav li {
+    display: inline-block;
+    list-style: none;
+    height: 60px;
+    line-height: 60px;
+    padding: 0 40px; 
+  }
+  
+  .nav li:hover {
+    background: red;
+    transition: background .3s;
+  }
+  
+  .nav-link {
+    color: #fff;
+    text-decoration: none;
+  }
+
+
+  .btn1{
+    color: #000000;
+    border-radius: 5px;
+    background: #4285F4;
+    box-shadow: 0px 1px 5px 1px #00000038, 0px 2px 5px 4px #8a858538;
+  }
+  .btn1:hover {
+      background: #2b78f5;
+      box-shadow: 0px 2px 20px 2px #00000072, 0px 5px 20px 2px #8a858558;
+  }
+
+
+  
+  .heart-container {
+    padding-top: 20px; 
+    animation:heartbeat 1s linear infinite both;
+    display:table;
+    height:10%;
+    text-align:center;
+    width:10%;
+    }
+    
+    .heart {
+    display:table-cell;
+    vertical-align:middle;
+    }
+    
+    
+    /* Heart Image */
+    
+    .heart svg {
+    background-color:#ffffff;
+    max-width:25%;
+    }
+    
+    
+    /* Generated with Bounce.js. Edit at https://goo.gl/h05rSW */
+    
+    @keyframes heartbeat {
+        0% { transform:matrix3d(1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1); }
+        2.1% { transform:matrix3d(1.022,0,0,0,0,1.022,0,0,0,0,1,0,0,0,0,1); }
+        4.1% { transform:matrix3d(1.036,0,0,0,0,1.036,0,0,0,0,1,0,0,0,0,1); }
+        8.21% { transform:matrix3d(1.046,0,0,0,0,1.046,0,0,0,0,1,0,0,0,0,1); }
+        11.41% { transform:matrix3d(1.042,0,0,0,0,1.042,0,0,0,0,1,0,0,0,0,1); }
+        14.51% { transform:matrix3d(1.032,0,0,0,0,1.032,0,0,0,0,1,0,0,0,0,1); }
+        20.72% { transform:matrix3d(1.011,0,0,0,0,1.011,0,0,0,0,1,0,0,0,0,1); }
+        27.03% { transform:matrix3d(0.997,0,0,0,0,0.997,0,0,0,0,1,0,0,0,0,1); }
+        33.23% { transform:matrix3d(0.993,0,0,0,0,0.993,0,0,0,0,1,0,0,0,0,1); }
+        45.75% { transform:matrix3d(0.998,0,0,0,0,0.998,0,0,0,0,1,0,0,0,0,1); }
+        58.26% { transform:matrix3d(1.001,0,0,0,0,1.001,0,0,0,0,1,0,0,0,0,1); }
+        83.28% { transform:matrix3d(1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1); }
+        100% { transform:matrix3d(1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1); }
+    }

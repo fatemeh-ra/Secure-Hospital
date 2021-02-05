@@ -25,6 +25,18 @@
     <div class="nav">
         <ul>
           <li style="color: lavender; font-family:  'Roboto Condensed', sans-serif;">Wellcome</li>
+
+          <div class="Validtargets validT-1">
+
+            <center style="top: 10px;">
+              
+              <p style="font-size: larger; padding-top: 8px; ">Valid targets of user</p>
+            </center>
+            <p class="valids">1- blah </p>
+              <p class="valids">2- blah bbah </p>
+              <p class="valids">3- blah bbah blah </p>
+          </div>
+
         </ul>
 
         <form method="POST" action="{% url 'logout' %}" id="logout">
@@ -77,7 +89,8 @@
             </div>
 
             <button class="Btn2" id="MYPrivacy"> MY-Privacy </button>
-    <button class="Btn2" id="InsertINTable"> Insert </button>
+    
+            <a href="../../RegisterPatients/?show=true"><button class="Btn2" id="PatientReception">Patient Reception</button></a>
 
           
           </div>
@@ -87,7 +100,7 @@
 
     <center>
       <button class="Btn1" id="update"> Update </button>
-  
+      <button class="Btn1" id="Delete"> Delete </button>
     <button class="Btn1" id="select"> Select </button>
     <button class="Btn1" id="insert"> Insert </button>
     </center>
