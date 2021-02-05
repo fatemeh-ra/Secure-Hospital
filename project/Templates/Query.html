@@ -28,12 +28,10 @@
         </ul>
 
         <form method="POST" action="{% url 'logout' %}" id="logout">
-          <!--
-          در این قسمت برای ارسال فرم ها به جنگو باین سی اس آر اف توکن را داخل فرم بنویسیم
-          در غیر اینصورت جنگو فرم ارسالی را از ما نمی پذیرد
-          -->
+     
           {% csrf_token %}
-          <input type="submit" value="logout" class="btn btn-light">
+            <input type="submit" value="logout" class="logoutbtn">
+
       </form>
       </div>
       <div style="padding-left:100px ; padding-top:20px ; ">
