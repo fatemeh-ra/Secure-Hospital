@@ -1,10 +1,11 @@
+{% load static %}
 
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="css/home.css">
+    <link rel="stylesheet" href="{% static 'css/home.css' %}">
     <script src="js/home.js"></script>
 
 
@@ -18,7 +19,7 @@
           <nav class="horizontal-nav primary-wrapper" role='navigation'>
             <ul>
               <li class="active-link"><a href="#">Home</a></li>
-              <li><a href="login.html">login</a></li>
+              <li><a href="../login">login</a></li>
                        </ul>
           </nav>
           <label for="mobile-menu-toggle" class="mobile-menu-label hidden"></label>
@@ -28,10 +29,10 @@
           
           <div class="banner-image"></div>
           <div class="logos">
-            
-                <img class="kn2clogomenu2" src="img/access.jpg" >
-                <img class="gitlablogo" src="img/sina.jpg" >
-                <img class="gitlablogo" src="img/postgress.png" >
+           
+                <img class="kn2clogomenu2" src=" {% static 'img/access.jpg' %}" >
+                <img class="gitlablogo" src=" {% static 'img/sina.jpg' %}" >
+                <img class="gitlablogo" src=" {% static 'img/postgress.png' %}" >
 
               </div>
           <div class="primary-wrapper">

@@ -1,3 +1,9 @@
+
+{% load static %}
+
+
+
+{% block content %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,7 +12,8 @@
     <title>Send Query </title>
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/Query.css">
+
+    <link rel="stylesheet" href="{% static 'css/Query.css' %}">
     <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
     <script src="js/home.js"></script>
   
@@ -14,14 +21,24 @@
 
 </head>
 <body>
+
     <div class="nav">
         <ul>
           <li style="color: lavender; font-family:  'Roboto Condensed', sans-serif;">Wellcome</li>
         </ul>
+
+        <form method="POST" action="{% url 'logout' %}" id="logout">
+          <!--
+          در این قسمت برای ارسال فرم ها به جنگو باین سی اس آر اف توکن را داخل فرم بنویسیم
+          در غیر اینصورت جنگو فرم ارسالی را از ما نمی پذیرد
+          -->
+          {% csrf_token %}
+          <input type="submit" value="logout" class="btn btn-light">
+      </form>
       </div>
       <div style="padding-left:100px ; padding-top:20px ; ">
         <div id="userinfo">
-          <center style="font-family: 'Roboto Condensed', sans-serif ; padding-top: 10px;">Hello .......</center>
+          <center style="font-family: 'Roboto Condensed', sans-serif ; padding-top: 10px;">Hello {{full_name}}</center>
         </div>  
        
       </div>
@@ -79,3 +96,7 @@
     
       </body>
 </html>
+
+
+
+{% endblock content %}
