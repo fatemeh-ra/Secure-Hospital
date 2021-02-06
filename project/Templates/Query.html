@@ -15,7 +15,7 @@
 
     <link rel="stylesheet" href="{% static 'css/Query.css' %}">
     <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-    <script src="js/home.js"></script>
+    <script src="{% static 'js/home.js' %}"></script>
   
 
 
@@ -60,8 +60,9 @@
           <center style="font-family: 'Roboto Condensed', sans-serif ;padding-top: 20px; font-size: 150%;">write and Send your Query , moreever you can select query type for more convenience  </center>
 
           <div class="search-wrapper">
-            <form>
-            <input  type="text" name="focus" required class="search-box" id="q" placeholder="Enter search term" />
+            <form method="POST" action="{% url 'sentQuery' %}" id="sentQuery" >
+               {% csrf_token %}
+            <input  type="text" name="sentQuery" required class="search-box" id="q" placeholder="Enter search term" />
               <button class="close-icon" type="reset"></button>
               <select name="points" id="points">
                 <option value="p1">p1</option>
@@ -100,7 +101,7 @@
 
     <center>
       <button class="Btn1" id="update"> Update </button>
-      <button class="Btn1" id="Delete"> Delete </button>
+      <button class="Btn1" id="delete"> Delete </button>
     <button class="Btn1" id="select"> Select </button>
     <button class="Btn1" id="insert"> Insert </button>
     </center>
