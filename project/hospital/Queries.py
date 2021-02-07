@@ -120,9 +120,34 @@ def export_data(subject_id):
         cursor.execute(Query, (subject_id,))
         result_set = cursor.fetchall()
     finally:
-        print(traceback.format_exc())   
+        # print(traceback.format_exc())
         cursor.close()
         return result_set
+
+
+def register_access(subject_id):
+    cursor = connection.cursor()
+    result_set = None
+    try:
+        Query = "select role from subjects where subject_id = %s"
+        cursor.execute(Query, (subject_id,))
+        result_set = cursor.fetchall()
+    finally:
+        cursor.close()
+    # print(result_set[0][0])
+    if result_set != None and result_set[0][0] == 'employee':
+        cursor = connection.cursor()
+        result_set = None
+        try:
+            Query = "select job from employees where subject_id = %s"
+            cursor.execute(Query, (subject_id,))
+            result_set = cursor.fetchall()
+        finally:
+            cursor.close()
+        if result_set != None and result_set[0][0] == 'administrative':
+            return True
+    return False
+
 
 def my_privacy(object_id):
     '''Output: Accesses ...'''
