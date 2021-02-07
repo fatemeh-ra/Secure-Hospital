@@ -111,8 +111,8 @@ def register_patient(registeration_id,f_name, l_name, national_id, age, sex,
         cursor.close()
         return success
 
-def export_name(subject_id):
-    '''Output: valid targets of this user'''
+def export_data(subject_id):
+    '''Output: user data : role, fname, lname, national_id, section'''
     cursor = connection.cursor()
     result_set = None
     try:
@@ -120,6 +120,7 @@ def export_name(subject_id):
         cursor.execute(Query, (subject_id,))
         result_set = cursor.fetchall()
     finally:
+        print(traceback.format_exc())   
         cursor.close()
         return result_set
 
