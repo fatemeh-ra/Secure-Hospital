@@ -132,7 +132,7 @@ class Doctors(models.Model):
     f_name = models.CharField(max_length=255)
     l_name = models.CharField(max_length=255)
     national_id = models.IntegerField(unique=True)
-    specialty = models.CharField(max_length=255)
+    speciality = models.CharField(max_length=255)
     section = models.ForeignKey('Sections', models.DO_NOTHING)
     employment_date = models.DateField(blank=True, null=True)
     age = models.IntegerField(blank=True, null=True)

@@ -23,13 +23,11 @@ create table Sections(
 );
 
 create table Subjects(
-	subject_id serial primary key,
+	subject_id int not null primary key,
 	role varchar(10) check (role in ('doctor', 'nurse', 'employee', 'patient')),
 	ASL varchar(5) not null check (ASL in ('TS', 'S', 'C', 'U')), -- Absolute
 	RSL varchar(5) not null check (RSL in ('TS', 'S', 'C', 'U')), -- Read
-	WSL varchar(5) not null check (WSL in ('TS', 'S', 'C', 'U')), -- Write
-	user_name varchar(255) not null,
-	password varchar(255) not null
+	WSL varchar(5) not null check (WSL in ('TS', 'S', 'C', 'U')) -- Write
 );
 
 create table Objects(
@@ -58,7 +56,7 @@ CREATE TABLE Doctors(
 	f_name VARCHAR (255) NOT null,
 	l_name VARCHAR (255) NOT null,
 	national_id INT UNIQUE NOT null,
-	specialty VARCHAR (255) NOT null,
+	speciality VARCHAR (255) NOT null,
 	section_id INT not null references sections(section_id),
 	employment_date DATE,
 	age INT,
@@ -74,9 +72,9 @@ CREATE TABLE Nurses(
 	l_name VARCHAR (255) NOT null,
 	national_id INT UNIQUE NOT null,
 	section_id INT not null references sections(section_id),
-	employment_date DATE not null,
+	employment_date DATE,
 	age INT,
-	salary INT not null,
+	salary INT,
 	marital_status char(8) check (marital_status in ('married', 'single'))
 );
 
@@ -87,10 +85,10 @@ CREATE table Employees(
 	f_name VARCHAR (255) NOT null,
 	l_name VARCHAR (255) NOT null,
 	national_id INT UNIQUE NOT null,
-	job VARCHAR (255) NOT null check (job in ('financial', 'official', 'other')),
-	employment_date DATE not null,
+	job VARCHAR (255) NOT null check (job in ('administrative', 'inspection', 'other')),
+	employment_date DATE,
 	age INT,
-	salary INT not null,
+	salary INT,
 	marital_status char(8) check (marital_status in ('married', 'single'))
 );
 
@@ -99,16 +97,16 @@ CREATE TABLE Patients(
 	registeration_id INT not null PRIMARY key,
 	subject_id int not null references subjects(subject_id),
 	object_id int not null references Objects(object_id),
-	f_name VARCHAR (255) UNIQUE NOT null,
-	l_name VARCHAR (255) UNIQUE NOT null,
-	national_id INT UNIQUE NOT null,
+	f_name VARCHAR (255) NOT null,
+	l_name VARCHAR (255) NOT null,
+	national_id INT NOT null,
 	age INT,
 	sex char(10) check (sex in ('Male', 'Female')),
 	illness VARCHAR (255),
 	section_id INT not null references Sections(section_id),
 	drugs VARCHAR (255),
-	doctor_id INT not null references Doctors(subject_id),
-	nurse_id INT not null references Nurses(subject_id)
+	doctor_id INT references Doctors(subject_id),
+	nurse_id INT references Nurses(subject_id)
 );
 
 create table Section_Manager(
@@ -135,13 +133,13 @@ create table Medical_assistant(
 
 create table Target_assignment(
 	target_id serial not null primary key,
-	target_type varchar(20) not null, -- check (target_type in ('')) TODO
+	target_type varchar(255) not null, -- check (target_type in ('')) TODO
 	subject_id int not null references Subjects(subject_id)
 );
 
 create table Object_Targets(
 	target_id serial not null primary key,
-	target_type varchar(20) not null, -- check (target_type in ('')) TODO
+	target_type varchar(255) not null, -- check (target_type in ('')) TODO
 	object_id int not null references Objects(object_id)
 );
 
@@ -156,7 +154,6 @@ create table Access_Log(
 	index serial not null primary key,
 	subject_id INT not null references Subjects(subject_id),
 	object_id int not null references Objects(object_id),
-	access_type varchar(20) check (access_type in ('read', 'write')),
 	target varchar(255)
 );
 
