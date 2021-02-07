@@ -2,17 +2,7 @@ from django.db import connection
 from django.contrib.auth.models import User
 import traceback
 
-def Login_Query(username, password):
-    '''Output: Subject_id and role if user is authenticated and None otherwise'''
-    cursor = connection.cursor()
-    result_set = None
-    try:
-        Query = "select subject_id, \"role\" from subjects where user_name = %s and \"password\" = %s"
-        cursor.execute(Query, (username, password, ))
-        result_set = cursor.fetchall()
-    finally:
-        cursor.close()
-        return result_set
+
 
 def valid_targets(subject_id):
     '''Output: valid targets of this user'''

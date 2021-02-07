@@ -3,8 +3,8 @@ from django.contrib.auth.models import User
 from django.contrib import auth
 from django.contrib.auth.models import User
 import re
-
-
+from hospital import TestData
+from hospital import Queries
 # Create your views here.
 def login(request):
     if request.method == 'POST':
@@ -13,9 +13,15 @@ def login(request):
             context = {}
             context['id'] = User.objects.get(username=user.username).pk
             context['full_name'] = User.objects.get(username=user.username).username
+            valid_functions = Queries.valid_targets(context['id'])
+            valid_targets = []
+            for l in valid_functions:
+                valid_targets.append(l[0])
+
+            context['valid_targets'] = valid_targets
             auth.login(request, user)
             # . . . 
-            return render(request , '../Templates/Query.html' , context)
+            return render(request , '../Templates/Query.html' , context  )
        
         else:
             return render(request, '../Templates/login.html', {'error':'Invalid Username Or Password'})
@@ -41,7 +47,7 @@ def sentQuery(request):
                 select_from = select_elements[1].strip()
                 select_where = ''
                 if (len(select_elements) > 2):
-                    select_where = select_elements[2].strip()()
+                    select_where = select_elements[2].strip()
                 if (select_from in db_tables):
                     main_Query = re.sub('["]' , '' , request.POST['sentQuery'])
                     if (select_where == ''):
