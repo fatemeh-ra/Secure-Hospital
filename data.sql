@@ -10,9 +10,5 @@ insert into sections values
 (201, 'Reports'),
 (202, 'Patient_Reports');
 
-delete from auth_user where username='doc0'
-
-delete from employees 
-
 
 

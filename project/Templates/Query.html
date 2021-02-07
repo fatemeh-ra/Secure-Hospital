@@ -21,7 +21,7 @@
 
 </head>
 <body>
-
+  
     <div class="nav">
         <ul>
           <li style="color: lavender; font-family:  'Roboto Condensed', sans-serif;">Wellcome</li>
@@ -32,9 +32,12 @@
               
               <p style="font-size: larger; padding-top: 8px; ">Valid targets of user</p>
             </center>
-            <p class="valids">1- blah </p>
-              <p class="valids">2- blah bbah </p>
-              <p class="valids">3- blah bbah blah </p>
+            <p class="valids">Role in hospital : {{usr_role}}</p>
+              <p class="valids">Name : {{Name}} </p>
+              <p class="valids">Family name : {{Fname}} </p>
+              <p class="valids">Nationnal ID  : {{nationalID}} </p>
+              <p class="valids"> Section ID  : {{SectionId}} </p>
+
           </div>
 
         </ul>
@@ -65,10 +68,12 @@
             <input  type="text" name="sentQuery" required class="search-box" id="q" placeholder="Enter search term" />
               <button class="close-icon" type="reset"></button>
               <select name="points" id="points">
-                <option value="p1">p1</option>
-                <option value="p2">p1</option>
-                <option value="p3">p1</option>
-                <option value="p4">p1</option>
+                {% for l in valid_targets %}
+                <option value="{{ l }}">{{ l }}</option>
+
+                {% endfor %}
+                
+
               </select>
               <center style="padding-top: 20px;"> 
                 <button class="submitbtn" id="Search"> Send Query</button>

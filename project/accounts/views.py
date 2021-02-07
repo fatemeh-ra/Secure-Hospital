@@ -3,8 +3,8 @@ from django.contrib.auth.models import User
 from django.contrib import auth
 from django.contrib.auth.models import User
 import re
-
-
+from hospital import TestData
+from hospital import Queries
 # Create your views here.
 def login(request):
     if request.method == 'POST':
@@ -13,9 +13,24 @@ def login(request):
             context = {}
             context['id'] = User.objects.get(username=user.username).pk
             context['full_name'] = User.objects.get(username=user.username).username
+            valid_functions = Queries.valid_targets(context['id'])
+            export_function = Queries.export_data(context['id'])[0]
+            user_extra_data = []
+            valid_targets = []
+            for i in export_function:
+                user_extra_data.append(i)
+            for l in valid_functions:
+                valid_targets.append(l[0])
+            context['usr_role'] = user_extra_data[0]
+            context['Name'] = user_extra_data[1]
+            context['Fname'] = user_extra_data[2]
+            context['nationalID'] = user_extra_data[3]
+            context['SectionId'] = user_extra_data[4]
+            
+            context['valid_targets'] = valid_targets
             auth.login(request, user)
             # . . . 
-            return render(request , '../Templates/Query.html' , context)
+            return render(request , '../Templates/Query.html' , context  )
        
         else:
             return render(request, '../Templates/login.html', {'error':'Invalid Username Or Password'})
@@ -41,7 +56,7 @@ def sentQuery(request):
                 select_from = select_elements[1].strip()
                 select_where = ''
                 if (len(select_elements) > 2):
-                    select_where = select_elements[2].strip()()
+                    select_where = select_elements[2].strip()
                 if (select_from in db_tables):
                     main_Query = re.sub('["]' , '' , request.POST['sentQuery'])
                     if (select_where == ''):
