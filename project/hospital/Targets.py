@@ -83,4 +83,6 @@ def log_access(query_from, query_where, target, subject_id, read_write):
 def check_table_clevel(t_name , subject_id):
 
     db_tables = ['Doctors','Nurses','Employees','Reports']
+
+
     

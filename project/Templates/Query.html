@@ -96,10 +96,11 @@
             </div>
 
             <button class="Btn2" id="MYPrivacy"> MY-Privacy </button>
-    
+            {% if canAddPatients ==  True  %}
             <a href="../../RegisterPatients/?show=true"><button class="Btn2" id="PatientReception">Patient Reception</button></a>
 
-          
+            {% endif %}
+
           </div>
         </div>
        

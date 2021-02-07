@@ -14,6 +14,7 @@ def login(request):
             context = {}
             context['id'] = User.objects.get(username=user.username).pk
             context['full_name'] = User.objects.get(username=user.username).username
+            context['canAddPatients'] = Queries.register_access(User.objects.get(username=user.username).pk)
             valid_functions = Queries.valid_targets(context['id'])
             export_function = Queries.export_data(context['id'])[0]
             user_extra_data = []
