@@ -151,3 +151,11 @@ def my_privacy(object_id):
     finally:
         cursor.close()
         return result_set
+
+
+
+def check_table_clevel(t_name , subject_id):
+    db_tables = ['Doctors','Nurses','Employees','Reports']
+    cursor = connection.cursor()
+
+    
