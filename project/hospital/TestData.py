@@ -32,7 +32,7 @@ def add_test_employees(n):
         user.save()
         obj = Objects(asl='U',msl='U',csl='U')
         obj.save()
-        j = choice(['administrative', 'Inspection', 'other'])
+        j = choice(['administrative', 'inspection', 'other'])
         doc = Employees(subject_id=user.id, object_id=obj.object_id, f_name='fname'+str(i), l_name='lname'+str(i),
                       national_id='1279'+str(i), job=j)
         doc.save()
