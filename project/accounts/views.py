@@ -52,7 +52,7 @@ def sentQuery(request):
 
             #section for select queies 
             User_query_target = request.POST['usrpoint']
-
+            user_Id = request.POST['subjectID']
             if request.POST['sentQuery'][0:5].lower() == 'selec':
                 select_elements = re.findall(r'"(.+?)"',request.POST['sentQuery'])
                 selected_col = select_elements[0].strip().split(',')
@@ -67,7 +67,10 @@ def sentQuery(request):
                     main_Query = re.sub('[;@#$!^&%-]' , '' , main_Query) 
                     #send query to check targets    
                     if ( Targets.check_targets(select_from ,select_where , User_query_target ) == 0):
-                        return HttpResponse('check is ok ')
+                        Targets.log_access(select_from ,select_where , User_query_target , user_Id , 0)
+                        return HttpResponse(Queries.read_query(main_Query , user_Id))
+                    else:
+                        return HttpResponse('check did not ok ')    
                 else:
                     return HttpResponse("Error : table name font find in DB")
                     
@@ -87,9 +90,13 @@ def sentQuery(request):
                     main_Query = re.sub('["]' , '' , request.POST['sentQuery'])
                     if (del_condition == ''):
                         main_Query = main_Query + 'where 1=1'
-                    main_Query = re.sub('[;@#$!^&%-]' , '' , main_Query)            
+                    main_Query = re.sub('[;@#$!^&%-]' , '' , main_Query) 
                     if ( Targets.check_targets(del_table ,del_condition , User_query_target ) == 0):
-                        return HttpResponse('check is ok ')
+                        Targets.log_access(del_table ,del_condition , User_query_target , user_Id , 1)
+         
+                        return HttpResponse(Queries.write_query(main_Query , user_Id))
+                    else:
+                        return HttpResponse('check is not ok ')    
                 else:
                     return HttpResponse('Error : bad query ')
 
@@ -105,15 +112,18 @@ def sentQuery(request):
                 up_table = update_elements[0].strip()
                 up_col = update_elements[1].strip()
                 up_condition = ''
-                if (len(delete_elements) > 2):
-                    del_condition = delete_elements[2].strip()
+                if (len(update_elements) > 2):
+                    up_condition = update_elements[2].strip()
                 if (up_table in db_tables):
                     main_Query = re.sub('["]' , '' , request.POST['sentQuery']) 
                     if (up_condition == ''):
                         main_Query = main_Query + 'where 1=1'
                     main_Query = re.sub('[;@#$!^&%-]' , '' , main_Query)       
                     if ( Targets.check_targets(up_table ,up_condition , User_query_target ) == 0):
-                        return HttpResponse('check is ok ')
+                        Targets.log_access(up_table ,up_condition , User_query_target , user_Id , 1)
+                        return HttpResponse(Queries.write_query(main_Query , user_Id))
+                    else:
+                        return HttpResponse('it s not ok')    
                 return HttpResponse('error : table not found ')
 
 
