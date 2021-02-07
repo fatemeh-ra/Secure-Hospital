@@ -14,10 +14,19 @@ def login(request):
             context['id'] = User.objects.get(username=user.username).pk
             context['full_name'] = User.objects.get(username=user.username).username
             valid_functions = Queries.valid_targets(context['id'])
+            export_function = Queries.export_data(context['id'])[0]
+            user_extra_data = []
             valid_targets = []
+            for i in export_function:
+                user_extra_data.append(i)
             for l in valid_functions:
                 valid_targets.append(l[0])
-
+            context['usr_role'] = user_extra_data[0]
+            context['Name'] = user_extra_data[1]
+            context['Fname'] = user_extra_data[2]
+            context['nationalID'] = user_extra_data[3]
+            context['SectionId'] = user_extra_data[4]
+            
             context['valid_targets'] = valid_targets
             auth.login(request, user)
             # . . . 
