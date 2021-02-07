@@ -5,6 +5,7 @@ from django.contrib.auth.models import User
 import re
 from hospital import TestData
 from hospital import Queries
+from hospital import Targets
 # Create your views here.
 def login(request):
     if request.method == 'POST':
@@ -50,6 +51,8 @@ def sentQuery(request):
             #FROM table_name
 
             #section for select queies 
+            User_query_target = request.POST['usrpoint']
+
             if request.POST['sentQuery'][0:5].lower() == 'selec':
                 select_elements = re.findall(r'"(.+?)"',request.POST['sentQuery'])
                 selected_col = select_elements[0].strip().split(',')
@@ -61,10 +64,12 @@ def sentQuery(request):
                     main_Query = re.sub('["]' , '' , request.POST['sentQuery'])
                     if (select_where == ''):
                         main_Query = main_Query + 'where 1=1'
-                    main_Query = re.sub('[;@#$!^&%-]' , '' , main_Query)     
-                    return HttpResponse(main_Query)
+                    main_Query = re.sub('[;@#$!^&%-]' , '' , main_Query) 
+                    #send query to check targets    
+                    if ( Targets.check_targets(select_from ,select_where , User_query_target ) == 0):
+                        return HttpResponse('check is ok ')
                 else:
-                    HttpResponse("Error : table name font find in DB")
+                    return HttpResponse("Error : table name font find in DB")
                     
 
             #DELETE FROM table_name WHERE condition;
@@ -83,7 +88,8 @@ def sentQuery(request):
                     if (del_condition == ''):
                         main_Query = main_Query + 'where 1=1'
                     main_Query = re.sub('[;@#$!^&%-]' , '' , main_Query)            
-                    return HttpResponse(main_Query)
+                    if ( Targets.check_targets(del_table ,del_condition , User_query_target ) == 0):
+                        return HttpResponse('check is ok ')
                 else:
                     return HttpResponse('Error : bad query ')
 
@@ -106,7 +112,8 @@ def sentQuery(request):
                     if (up_condition == ''):
                         main_Query = main_Query + 'where 1=1'
                     main_Query = re.sub('[;@#$!^&%-]' , '' , main_Query)       
-                    return HttpResponse(main_Query)
+                    if ( Targets.check_targets(up_table ,up_condition , User_query_target ) == 0):
+                        return HttpResponse('check is ok ')
                 return HttpResponse('error : table not found ')
 
 

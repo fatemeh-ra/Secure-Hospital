@@ -30,7 +30,7 @@
 
             <center style="top: 10px;">
               
-              <p style="font-size: larger; padding-top: 8px; ">Valid targets of user</p>
+              <p style="font-size: larger; padding-top: 8px; ">User Personal Data</p>
             </center>
             <p class="valids">Role in hospital : {{usr_role}}</p>
               <p class="valids">Name : {{Name}} </p>
@@ -67,7 +67,7 @@
                {% csrf_token %}
             <input  type="text" name="sentQuery" required class="search-box" id="q" placeholder="Enter search term" />
               <button class="close-icon" type="reset"></button>
-              <select name="points" id="points">
+              <select name="usrpoint" id="point">
                 {% for l in valid_targets %}
                 <option value="{{ l }}">{{ l }}</option>
 

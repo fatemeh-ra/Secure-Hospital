@@ -2,7 +2,7 @@ from django.db import connection
 
 
 def check_targets(query_from, query_where, target):
-    """Output: 0 if all targets are valid, 0 otherwise"""
+    """Output: 0 if all targets are valid, 1 otherwise"""
     cursor = connection.cursor()
     result_set = None
     success = 0
