@@ -21,8 +21,8 @@ begin
 end
 $$ LANGUAGE plpgsql;
 
-select * from nurses n where n.object_id in (select * from write_access(3))
-update Nurses set age = 25 where age < 25 and subject_id in (select * from write_access(3))
+--select * from nurses n where n.object_id in (select * from write_access(3))
+--update Nurses set age = 25 where age < 25 and subject_id in (select * from write_access(3))
 
 create function write_access(id int)
 returns table(object_id int)
@@ -80,7 +80,7 @@ $$ LANGUAGE plpgsql;
 -------------------------------------------------------------------------------------------------
 -- Patient Registeration
 
-create or replace procedure register_patient(registeration_id INT, f_name varchar(255), l_name varchar(255),
+create or replace procedure register_patient(f_name varchar(255), l_name varchar(255),
 	national_id INT, age INT, sex char(10), illness VARCHAR (255), section_id INT, drugs VARCHAR (255), 
 	doctor_id INT, nurse_id int, id int)
 as $$
@@ -96,7 +96,7 @@ begin
 	where subject_id = id;
 	insert into subject_category (subject_id, section_id) values (id, section_id);
 	
-	insert into patients values (registeration_id, id, o, f_name, l_name, national_id,
+	insert into patients values (id, o, f_name, l_name, national_id,
 	"age", sex, illness, section_id, drugs, doctor_id, nurse_id);
 end
 $$ LANGUAGE plpgsql;
