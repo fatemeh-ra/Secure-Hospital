@@ -116,6 +116,7 @@ def export_data(subject_id):
 
 
 def register_access(subject_id):
+    if is_manager(subject_id) : return True
     cursor = connection.cursor()
     result_set = None
     try:
@@ -170,4 +171,37 @@ def check_table_clevel(t_name , subject_id):
         return result_set
 
 
-    
+def is_manager(subject_id):
+    cursor = connection.cursor()
+    result_set = None
+    try:
+        cursor.execute("select * from Manager where manager_id = %s", (subject_id, ))
+        result_set = cursor.fetchall()
+    finally:
+        cursor.close()
+
+    if result_set != []: return True
+
+    cursor = connection.cursor()
+    result_set = None
+    try:
+        cursor.execute("select * from system_manager where manager_id = %s", (subject_id,))
+        result_set = cursor.fetchall()
+    finally:
+        cursor.close()
+
+    if result_set != []: return True
+    return False
+
+
+
+
+
+
+
+
+
+
+
+
+

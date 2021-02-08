@@ -153,7 +153,8 @@ create or replace function insert_manager_func() RETURNS trigger AS $insert_mana
 BEGIN
 	update subjects set rsl = 'TS'
 	where subject_id = new.manager_id;
-
+	
+	delete from subject_category where subject_id = new.manager_id;
 	insert into subject_category (subject_id, section_id) values
 	(new.manager_id, 101),
 	(new.manager_id, 102),
