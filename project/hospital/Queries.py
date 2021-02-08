@@ -155,7 +155,19 @@ def my_privacy(object_id):
 
 
 def check_table_clevel(t_name , subject_id):
-    db_tables = ['Doctors','Nurses','Employees','Reports']
+    db_tables = {'Doctors':('TS', 'TS', 'S'),'Nurses':('S', 'TS', 'S'),
+                 'Employees':('TS', 'TS', 'S'),'Reports':('TS', 'TS', 'S')} # TODO: these values must be edited
     cursor = connection.cursor()
+    result_set = None
+    try:
+        Query = 'select * from write_compare(\'%s\', \'%s\', \'%s\', %s)'%(db_tables[t_name]+(subject_id,))
+        print(Query)
+        cursor.execute(Query)
+        result_set = cursor.fetchall()
+    finally:
+        print(traceback.format_exc())
+        cursor.close()
+        return result_set
+
 
     

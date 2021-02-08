@@ -109,7 +109,7 @@ $$ LANGUAGE plpgsql;
 -- Export user data (name)
 
 
-drop function export_data(int);
+-- drop function export_data(int);
 create or replace function export_data(id int)
 returns table(role varchar(255), f_name varchar(255), lname varchar(255), national_id int, section_id int)
 as $$
@@ -126,11 +126,42 @@ begin
 	elseif r = 'patient' then
 		return query select r, p.f_name, p.l_name, p.national_id, p.section_id from patients p where p.subject_id = $1;
 	end if;
+end
 $$ LANGUAGE plpgsql;	
 
 --select * from export_data(35)
 
 
+
+-------------------------------------------------------------------------------------------------
+-- Accesss Comprison
+
+
+create or replace function write_compare(asl varchar(5), msl varchar(5), csl varchar(5), id int)
+returns boolean
+as $$
+begin 	
+	if geq((select s.asl from subjects s where s.subject_id = id) , csl)
+		and geq(asl, (select s.wsl from subjects s where s.subject_id = id)) then
+		return 1;
+	else
+		return 0;
+	end if;
+end
+$$ LANGUAGE plpgsql;	
+
+create or replace function read_compare(asl varchar(5), msl varchar(5), csl varchar(5), id int)
+returns boolean
+as $$
+begin 	
+	if geq(o.msl, (select s.asl from subjects s where s.subject_id = id))
+		and geq((select s.rsl from subjects s where s.subject_id = id), o.asl) then
+		return 1;
+	else
+		return 0;
+	end if;
+end
+$$ LANGUAGE plpgsql;	
 
 
 
