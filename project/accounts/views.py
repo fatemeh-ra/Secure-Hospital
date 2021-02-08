@@ -142,6 +142,11 @@ def sentQuery(request):
                 ins_val = insert_elements[2].strip().split(',')
                 if (ins_table in db_tables):
                     main_Query = re.sub('["]' , '' , request.POST['sentQuery']) 
-                    main_Query = re.sub('[;@#$!^&%-]' , '' , main_Query)       
-                    return HttpResponse(main_Query)
+                    main_Query = re.sub('[;@#$!^&%-]' , '' , main_Query)
+                    if (Queries.check_table_clevel(ins_table,user_Id)[0][0]  and (Queries.insert_query_exec(main_Query) == 0)):
+                        return HttpResponse('query done ')
+                    else:
+                        return HttpResponse('its not ok ')    
+
+                    
                 return HttpResponse('error : table not found')

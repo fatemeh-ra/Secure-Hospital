@@ -21,7 +21,7 @@ h3{
     display: inline-block;
 
     border-radius: 20px;
-    margin: 10px;
+    margin: 2px;
   }
 
   input{
@@ -95,7 +95,7 @@ h3{
       
     background: rgb(2,2,3);
     background: radial-gradient(circle, rgb(63, 141, 177) 30%, rgb(0, 0, 0) 100%,  rgb(63, 141, 177) 30%);
-    height: 60px; 
+    height: 100px; 
   }
   
   .nav li {

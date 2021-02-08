@@ -47,6 +47,24 @@ def write_query(Query, subject_id):
         cursor.close()
         return success
 
+
+
+def insert_query_exec(Query):
+    print(Query)
+    cursor = connection.cursor()
+    success = 0 
+    try:
+        cursor.execute(Query , ())
+    except:
+        success = 1 
+        print(traceback.format_exc())
+    finally:
+        cursor.close()
+        return success        
+
+
+
+
 def read_query(Query, subject_id):
     '''Input: Query in form of <Select ~ from ~ where ~ >
     ** It should have where clause
