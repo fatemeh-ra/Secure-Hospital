@@ -2,6 +2,9 @@
 
 {% load static %}
 
+
+
+{% block content %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -40,31 +43,19 @@
 
 
     <center >
+       
     <table align="center" cellpadding = "10" class="t_form">
-     <form action="">
+        <form method="POST" action="{% url 'add' %}" id="add" >
+            {% csrf_token %}
     <!----- First Name ---------------------------------------------------------->
     <tr>
     <td>First Name</td>
     <td><input type="text" name="fname" maxlength="30"/>
+       Last Name : <input type="text" name="lname" maxlength="30"/>
+       National ID : <input type="text" name="national_Id" maxlength="100" />
+    </td>
+    </tr>
   
-    </td>
-    </tr>
-     
-    <!----- Last Name ---------------------------------------------------------->
-    <tr>
-    <td>Last Name</td>
-    <td><input type="text" name="lname" maxlength="30"/>
-    
-    </td>
-    </tr>
-     
-   
-    
-    
-    <tr>
-    <td>National ID</td>
-    <td><input type="text" name="national_Id" maxlength="100" /></td>
-    </tr>
      
   
     <tr>
@@ -78,21 +69,23 @@
     <tr>
     <td>Gender</td>
     <td>
-    Male <input type="radio" name="Gender" value="Male" />
-    Female <input type="radio" name="Gender" value="Female" />
+        <select name="sex" id="sex">
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+          </select>
     </td>
     </tr>
      
     <!----- Type of disease ---------------------------------------------------------->
     <tr>
-    <td>Type of disease <br /><br /><br /></td>
-    <td><textarea name="disease_type" rows="2" cols="30"></textarea></td>
+    <td>illness <br /><br /><br /></td>
+    <td><textarea name="illness" rows="2" cols="30"></textarea></td>
     </tr>
      
     <!----- Inpatient department ---------------------------------------------------------->
     <tr>
-    <td>Inpatient department</td>
-    <td><input type="text" name="Inpatient_dep" maxlength="30" />
+    <td>Section ID </td>
+    <td><input type="text" name="section_ID" maxlength="10" />
     </td>
     </tr>
      
@@ -106,60 +99,99 @@
      
     <!----- State ---------------------------------------------------------->
     <tr>
-    <td>Doctor name</td>
-    <td><input type="text" name="Doctor_name" maxlength="30" />
+    <td>Doctor ID</td>
+    <td><input type="text" name="Doctor_id" maxlength="30" />
 
     </td>
     </tr>
      
     <!----- Country ---------------------------------------------------------->
     <tr>
-    <td>Nurse</td>
-    <td><input type="text" name="Nurse"  /></td>
+    <td>Nurse ID </td>
+    <td><input type="text" name="Nurse_id"  /></td>
+    </tr>
+
+    tr>
+    <td>login Data : </td>
+    <td>
+        
+        user name : <input type="text" name="username"  />
+        password : <input type="password" name="pass"  />
+    
+    </td>
     </tr>
      
     <!----- Hobbies ---------------------------------------------------------->
      
     <tr>
-    <td>HOBBIES <br /><br /><br /></td>
+    <td>Preferences <br /><br /><br /></td>
      
     <td>
-    Drawing
-    <input type="checkbox" name="Hobby_Drawing" value="Drawing" />
-    Singing
-    <input type="checkbox" name="Hobby_Singing" value="Singing" />
-    Dancing
-    <input type="checkbox" name="Hobby_Dancing" value="Dancing" />
-    Sketching
-    <input type="checkbox" name="Hobby_Cooking" value="Cooking" />
-    <br />
-    Others
-    <input type="checkbox" name="Hobby_Other" value="Other">
-    <input type="text" name="Other_Hobby" maxlength="30" />
-    </td>
-    </tr>
-     
     
-    <!----- Course ---------------------------------------------------------->
-    <tr>
-    <td>COURSES<br />APPLIED FOR</td>
-    <td>
-    BCA
-    <input type="radio" name="Course_BCA" value="BCA">
-    B.Com
-    <input type="radio" name="Course_BCom" value="B.Com">
-    B.Sc
-    <input type="radio" name="Course_BSc" value="B.Sc">
-    B.A
-    <input type="radio" name="Course_BA" value="B.A">
+    <!-- first part  -->
+    <div style="margin: 0px;">
+        <input type="checkbox" name="Doctor_preferences" value="Doctor_preferences" />
+        Main preferences of patient(Doctors) : 
+        
+        <p style="left: 10px;">1- checkup patients by his/her doctor </p>
+        <p style="left: 10px;">2- prescribe patients by his/her doctor</p>  
+        <p style="left: 10px;">3- patient doctor can see Medical records        </p>  
+    </div>
+
+
+    <br />
+
+<!-- second part  -->
+
+    <div style="margin: 0px;">
+        <input type="checkbox" name="Nurses_preferences" value="Nurses_preferences" />
+        Main preferences of patient(Nurses) : 
+        
+        <p style="left: 10px;">1- patient care by her/his Nurse </p>
+       
+    </div>
+
+
+
+<!-- third part -->
+
+    <div style="margin: 0px;">
+        <input type="checkbox" name="accounting_preferences" value="accounting_preferences" />
+        Main preferences of patient(accounting) : 
+        
+        <p style="left: 10px;">1- patient data records for accounting section </p>
+    </div>
+    
+
+    <div style="margin: 0px;">
+
+       
+        <input type="checkbox" name="checkup_section_doc" value="checkup_section_doc" />
+        Section doctor can checkup patient 
+
+        <input type="checkbox" name="prescribe_section_doc" value="prescribe_section_doc" />
+        section doctor can prescribe for patient
+
+        <input type="checkbox" name="records_section_doc" value="records_section_doc" />
+        section doctor can see records of patient
+
+        <input type="checkbox" name="records_personal_nurse" value="records_personal_nurse" />
+        patient Nurse can see medical records
+        
+     
+    </div>
+    
+
+
     </td>
     </tr>
+
      
     <!----- Submit and Reset ------------------------------------------------->
     <tr>
     <td colspan="2" align="center">
     <input class="btn1" type="submit" value="Submit">
-    <input class="btn1" type="reset" value="Reset">
+  
     </td>
     </tr>
 </form>
@@ -171,3 +203,6 @@
      
 </body>
 </html>
+
+
+{% endblock content %}

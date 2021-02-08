@@ -67,6 +67,7 @@
             <input  type="text" name="sentQuery" required class="search-box" id="q" placeholder="Enter search term" />
               <button class="close-icon" type="reset"></button>
               <input type="hidden" name="subjectID" id="subjectID" value="{{ id }}">
+              <input type="hidden" name="Role" id="Role" value="{{ usr_role }}">
 
               <select name="usrpoint" id="point">
                 {% for l in valid_targets %}
