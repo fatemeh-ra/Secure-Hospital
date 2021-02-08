@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from django.shortcuts import render , HttpResponse , redirect
+from hospital.Queries import *
  # Create your views here.
 
 
@@ -20,8 +21,11 @@ def addpatient(request):
     illness = request.POST['illness']
     section_ID = request.POST['section_ID']
     Prescribed_d = request.POST['Prescribed_d']
-    Doctor_name = request.POST['Doctor_name']
-    Nurse = request.POST['Nurse']
+    Doctor_id = request.POST['Doctor_id']
+    Nurse_id = request.POST['Nurse_id']
+    username = request.POST['username']
+    password = request.POST['pass']
+    
     preferness = []
     Doctor_preferences = request.POST.get('Doctor_preferences')
     if  Doctor_preferences:
@@ -57,7 +61,7 @@ def addpatient(request):
 
 
     if request.POST.get('records_personal_nurse'): 
-        preferness.append('records_personal_nurse   ')
+        preferness.append('records_personal_nurse')
          
 
-    return HttpResponse(len(preferness))     
+    register_patient( 2 ,name,lname,national_Id , age , sex , illness , section_ID , Prescribed_d ,Doctor_id ,Nurse_id , username , password )
