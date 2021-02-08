@@ -102,22 +102,22 @@ def add_report(subject_id, object_id, detail):
 def register_patient(registeration_id,f_name, l_name, national_id, age, sex,
                      illness, section_id, drugs, doctor_id, nurse_id, user, passw):
     '''Input: patient info
-        Output: 0 if successful and 1 otherwise'''
+        Output: subject_id if successful and -1 otherwise'''
     user = User.objects.create_user(username=user, password=passw)
     user.save()
     cursor = connection.cursor()
-    success = 0
+    result = -1
     try:
-        Query = "Call register_patient(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+        Query = "Call register_patient(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
         cursor.execute(Query, (registeration_id, f_name, l_name, national_id, age, sex,
                                illness, section_id, drugs, doctor_id, nurse_id, user.id))
+        result = user.id
     except:
-        # print(traceback.format_exc())
-        success = 1
+        print(traceback.format_exc())
         print('bad Query')
     finally:
         cursor.close()
-        return success
+        return result
 
 def export_data(subject_id):
     '''Output: user data : role, fname, lname, national_id, section'''

@@ -37,7 +37,6 @@ def log_access(query_from, query_where, target, subject_id, read_write):
     result_set = None
     try:
         Query = "select object_id from %s where %s"%(query_from, query_where,)
-        print(Query)
         cursor.execute(Query)
         result_set = cursor.fetchall()
     except:
@@ -75,6 +74,35 @@ def log_access(query_from, query_where, target, subject_id, read_write):
             cursor.execute("insert into Access_Log values(default, %s, %s, %s)", (subject_id, i, target, ))
         finally:
             cursor.close()
+
+
+def add_patient_targets(targets, subject_id):
+    '''Input: a list of valid targets and id of newly added patient'''
+    cursor = connection.cursor()
+    object_id = None
+    try:
+        Query = "select object_id from patients where subject_id=%s" % (subject_id,)
+        cursor.execute(Query)
+        object_id = cursor.fetchall()[0][0]
+    except:
+        print("error")
+    finally:
+        cursor.close()
+
+    if object_id == None : return
+    for t in targets:
+        cursor = connection.cursor()
+        try:
+            Query = "insert into object_targets(target_type,object_id) values ('%s', %s)" % (t, object_id,)
+            print(Query)
+            cursor.execute(Query)
+        except:
+            print("error")
+        finally:
+            cursor.close()
+
+
+
 
 
 
