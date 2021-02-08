@@ -1,21 +1,21 @@
-drop table system_manager;
-drop table manager;
-drop table administrative_assistant;
-drop table medical_assistant;
-drop table reports;
-drop table target_assignment;
-drop table section_manager;
-drop table patients;
-drop table Doctors;
-drop table Nurses;
-drop table Employees;
-drop table subject_category;
-drop table object_category;
-drop table object_targets;
-drop table Access_log;
-drop table Sections;
-drop table Subjects;
-drop table objects;
+--drop table system_manager;
+--drop table manager;
+--drop table administrative_assistant;
+--drop table medical_assistant;
+--drop table reports;
+--drop table target_assignment;
+--drop table section_manager;
+--drop table patients;
+--drop table Doctors;
+--drop table Nurses;
+--drop table Employees;
+--drop table subject_category;
+--drop table object_category;
+--drop table object_targets;
+--drop table Access_log;
+--drop table Sections;
+--drop table Subjects;
+--drop table objects;
 
 create table Sections(
 	section_id INT not null PRIMARY KEY,
@@ -75,7 +75,8 @@ CREATE TABLE Nurses(
 	employment_date DATE,
 	age INT,
 	salary INT,
-	marital_status char(8) check (marital_status in ('married', 'single'))
+	marital_status char(8) check (marital_status in ('married', 'single')),
+	commands varchar(255)
 );
 
 

@@ -361,7 +361,21 @@ create trigger del_med_assist before insert on Medical_assistant
       
    
    
-   
+
+----------------------------------------------------------------------------------------------
+-- command doctor on nurse
+
+create or replace function update_comm_func() RETURNS trigger AS $update_comm_func$
+BEGIN
+	new.command := concat(old.command, new.command);
+	RETURN NEW;  
+END;
+$update_comm_func$ LANGUAGE plpgsql;
+
+-- drop trigger insert_admin_assist on Medical_assistant;
+create trigger update_comm before update on Nurses
+    FOR EACH ROW EXECUTE PROCEDURE update_comm_func();
+
    
    
    
