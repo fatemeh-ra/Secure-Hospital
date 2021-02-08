@@ -95,7 +95,7 @@ CREATE table Employees(
 
 
 CREATE TABLE Patients(
-	registeration_id INT not null PRIMARY key,
+	registeration_id serial not null PRIMARY key,
 	subject_id int not null references subjects(subject_id),
 	object_id int not null references Objects(object_id),
 	f_name VARCHAR (255) NOT null,

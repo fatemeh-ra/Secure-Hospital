@@ -111,20 +111,25 @@ BEGIN
 		(new.subject_id, 102),
 		(new.subject_id, 103),
 		(new.subject_id, 104);
-	
+		
+		insert into target_assignment values 
+		(default, 'bills', new.subject_id),
+		(default, 'annual_report', new.subject_id),
+		(default, 'debt_calculation', new.subject_id),
+		(default, 'patient_accounting', new.subject_id);
+		
 	elseif new.job = 'inspection' then
 		update subjects set  rsl = 'TS'
 		where subject_id = new.subject_id;
 		insert into subject_category (subject_id, section_id) values 
 		(new.subject_id, 201),
 		(new.subject_id, 202);
+	
+		insert into target_assignment values 
+		(default, 'report_handling', new.subject_id);
 	end if;
 
 	-- set employee valid targets
-	insert into target_assignment values 
-	(default, 'bills', new.subject_id),
-	(default, 'annual_report', new.subject_id),
-	(default, 'debt_calculation', new.subject_id);
 
 	insert into object_targets values
 	(default, 'official_staff_management', new.object_id),
@@ -367,7 +372,7 @@ create trigger del_med_assist before insert on Medical_assistant
 
 create or replace function update_comm_func() RETURNS trigger AS $update_comm_func$
 BEGIN
-	new.command := concat(old.command, new.command);
+	new.commands := concat(old.commands, new.commands);
 	RETURN NEW;  
 END;
 $update_comm_func$ LANGUAGE plpgsql;

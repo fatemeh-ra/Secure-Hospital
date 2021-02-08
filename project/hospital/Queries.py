@@ -81,7 +81,7 @@ def add_report(subject_id, object_id, detail):
         cursor.close()
         return success
 
-def register_patient(registeration_id,f_name, l_name, national_id, age, sex,
+def register_patient(f_name, l_name, national_id, age, sex,
                      illness, section_id, drugs, doctor_id, nurse_id, user, passw):
     '''Input: patient info
         Output: subject_id if successful and -1 otherwise'''
@@ -90,8 +90,8 @@ def register_patient(registeration_id,f_name, l_name, national_id, age, sex,
     cursor = connection.cursor()
     result = -1
     try:
-        Query = "Call register_patient(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
-        cursor.execute(Query, (registeration_id, f_name, l_name, national_id, age, sex,
+        Query = "Call register_patient(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+        cursor.execute(Query, (f_name, l_name, national_id, age, sex,
                                illness, section_id, drugs, doctor_id, nurse_id, user.id))
         result = user.id
     except:
