@@ -45,8 +45,8 @@ def logout(request):
         return render(request,'../Templates/home.html')
     
 def sentQuery(request):
-        db_tables = ['Doctors','Nurses','Employees','Reports']
-
+        db_tables = ['Doctors','Nurses','Employees','Reports' , 'Patients']
+        
         if request.method == 'POST':
             #SELECT column1, column2, ...
             #FROM table_name
@@ -54,6 +54,8 @@ def sentQuery(request):
             #section for select queies 
             User_query_target = request.POST['usrpoint']
             user_Id = request.POST['subjectID']
+            user_role = request.POST['Role']
+
             if request.POST['sentQuery'][0:5].lower() == 'selec':
                 select_elements = re.findall(r'"(.+?)"',request.POST['sentQuery'])
                 selected_col = select_elements[0].strip().split(',')
@@ -66,12 +68,20 @@ def sentQuery(request):
                     if (select_where == ''):
                         main_Query = main_Query + 'where 1=1'
                     main_Query = re.sub('[;@#$!^&%-]' , '' , main_Query) 
-                    #send query to check targets    
-                    if ( Targets.check_targets(select_from ,select_where , User_query_target ) == 0):
-                        Targets.log_access(select_from ,select_where , User_query_target , user_Id , 0)
-                        return HttpResponse(Queries.read_query(main_Query , user_Id))
-                    else:
-                        return HttpResponse('check did not ok ')    
+                    #send query to check targets
+                    if (select_from == 'Patients'):
+
+                        if (Targets.target_check_patient(select_where ,User_query_target , 0,user_Id , user_role ) == 0):
+                            Targets.log_access(select_from ,select_where , User_query_target , user_Id , 0)
+                            return HttpResponse(Queries.read_query(main_Query , user_Id))
+                        else:
+                            return HttpResponse('error')    
+                    elif (select_from != 'Patients'):
+                        if ( Targets.check_targets(select_from ,select_where , User_query_target ) == 0):
+                            Targets.log_access(select_from ,select_where , User_query_target , user_Id , 0)
+                            return HttpResponse(Queries.read_query(main_Query , user_Id))
+                        else:
+                            return HttpResponse('check did not ok ')    
                 else:
                     return HttpResponse("Error : table name font find in DB")
                     
@@ -92,12 +102,19 @@ def sentQuery(request):
                     if (del_condition == ''):
                         main_Query = main_Query + 'where 1=1'
                     main_Query = re.sub('[;@#$!^&%-]' , '' , main_Query) 
-                    if ( Targets.check_targets(del_table ,del_condition , User_query_target ) == 0):
-                        Targets.log_access(del_table ,del_condition , User_query_target , user_Id , 1)
+                    if (del_table != 'Patients' ):
+                        if ( Targets.check_targets(del_table ,del_condition , User_query_target ) == 0):
+                            Targets.log_access(del_table ,del_condition , User_query_target , user_Id , 1)
          
-                        return HttpResponse(Queries.write_query(main_Query , user_Id))
-                    else:
-                        return HttpResponse('check is not ok ')    
+                            return HttpResponse(Queries.write_query(main_Query , user_Id))
+                        else:
+                            return HttpResponse('check is not ok ')  
+                    elif (del_table == 'Patients'):
+                        if (Targets.target_check_patient(del_condition ,User_query_target , 1, user_Id , user_role ) == 0):
+                            Targets.log_access(del_table ,del_condition , User_query_target , user_Id , 1)
+                            return HttpResponse(Queries.write_query(main_Query , user_Id))
+                        else:
+                            return HttpResponse('error ')                       
                 else:
                     return HttpResponse('Error : bad query ')
 
@@ -119,13 +136,21 @@ def sentQuery(request):
                     main_Query = re.sub('["]' , '' , request.POST['sentQuery']) 
                     if (up_condition == ''):
                         main_Query = main_Query + 'where 1=1'
-                    main_Query = re.sub('[;@#$!^&%-]' , '' , main_Query)       
-                    if ( Targets.check_targets(up_table ,up_condition , User_query_target ) == 0):
-                        Targets.log_access(up_table ,up_condition , User_query_target , user_Id , 1)
-                        return HttpResponse(Queries.write_query(main_Query , user_Id))
-                    else:
-                        return HttpResponse('it s not ok')    
-                return HttpResponse('error : table not found ')
+                    main_Query = re.sub('[;@#$!^&%-]' , '' , main_Query)
+                    if (up_table != 'Patients'):
+                        if ( Targets.check_targets(up_table ,up_condition , User_query_target ) == 0):
+                            Targets.log_access(up_table ,up_condition , User_query_target , user_Id , 1)
+                            return HttpResponse(Queries.write_query(main_Query , user_Id))
+                        else:
+                            return HttpResponse('it s not ok')
+                    elif(up_table == 'Patients'):
+                        if (Targets.target_check_patient(up_condition,User_query_target,1,user_Id,user_role) == 0):
+                            Targets.log_access(up_table ,up_condition , User_query_target , user_Id , 1)
+                            return HttpResponse(Queries.write_query(main_Query , user_Id))
+                        else: 
+                            return HttpResponse('error')                       
+                else:
+                    return HttpResponse('error : table not found ')
 
 
 

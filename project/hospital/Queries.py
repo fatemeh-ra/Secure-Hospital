@@ -108,7 +108,10 @@ def register_patient(f_name, l_name, national_id, age, sex,
     cursor = connection.cursor()
     result = -1
     try:
-        Query = "Call register_patient(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+        Query = "Call register_patient( %s, %s, %s, %s, %s, %s, %s,%s, %s, %s, %s )"
+        print("---------------------------------------------------------------------------")
+        print(Query %(f_name, l_name, national_id, age, sex,
+                               illness, section_id, drugs, doctor_id, nurse_id, user.id) ) 
         cursor.execute(Query, (f_name, l_name, national_id, age, sex,
                                illness, section_id, drugs, doctor_id, nurse_id, user.id))
         result = user.id

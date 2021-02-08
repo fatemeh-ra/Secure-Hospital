@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.shortcuts import render , HttpResponse , redirect
 from hospital.Queries import *
+from hospital.Targets import *
  # Create your views here.
 
 
@@ -63,5 +64,9 @@ def addpatient(request):
     if request.POST.get('records_personal_nurse'): 
         preferness.append('records_personal_nurse')
          
-
-    register_patient( 2 ,name,lname,national_Id , age , sex , illness , section_ID , Prescribed_d ,Doctor_id ,Nurse_id , username , password )
+    subject_id = register_patient(name,lname,int(national_Id) , int(age) , sex , illness , int(section_ID) , Prescribed_d , int(Doctor_id) , int(Nurse_id) , username , password )
+    if ( subject_id== -1):
+         return HttpResponse('error')
+    else:
+         add_patient_targets(preferness ,subject_id )
+         return HttpResponse('it is ok')
