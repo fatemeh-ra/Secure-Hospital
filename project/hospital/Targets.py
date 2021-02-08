@@ -94,17 +94,100 @@ def add_patient_targets(targets, subject_id):
         cursor = connection.cursor()
         try:
             Query = "insert into object_targets(target_type,object_id) values ('%s', %s)" % (t, object_id,)
-            print(Query)
             cursor.execute(Query)
         except:
             print("error")
         finally:
             cursor.close()
 
+def target_check_patient(query_where, target, read_write, subject_id, role):
+    """Input read_write: 0 for raed Query, 1 for write query
+    Output: 0 if all targets are valid, 1 otherwise"""
+    success = 0
+    cursor = connection.cursor()
+    result_set = None
+    try:
+        Query = "select object_id from Patients where %s" % (query_where,)
+        cursor.execute(Query)
+        result_set = cursor.fetchall()
+    except:
+        print("error acc 2  ")
+    finally:
+        cursor.close()
+
+    cursor = connection.cursor()
+    result_set2 = None
+    if read_write == 0:
+        try:
+            Query = "select * from read_access(%s)" % (subject_id,)
+            cursor.execute(Query)
+            result_set2 = cursor.fetchall()
+        except:
+            print("error acc 1  ")
+        finally:
+            cursor.close()
+    elif read_write == 1:
+        try:
+            Query = "select * from write_access(%s)" % (subject_id,)
+            cursor.execute(Query)
+            result_set2 = cursor.fetchall()
+        except:
+            print("error acc ")
+        finally:
+            cursor.close()
 
 
+    for i in list(set(result_set) & set(result_set2)):
+        cursor = connection.cursor()
+        try:
+            cursor.execute("select target_type from object_targets where object_id = %s", (i))
+            res = cursor.fetchall()
+            res2 = []
+            for l in res:
+                res2.append(l[0])
+        finally:
+            cursor.close()
 
+        if role == 'Doctor':
+            cursor = connection.cursor()
+            doc = None
+            try:
+                cursor.execute("select doctor_id from Patients where object_id = %s", (i,))
+                ret = cursor.fetchall()
+                doc = ret[0][0]
+            finally:
+                cursor.close()
+            if doc == subject_id:
+                if target+'_personal_doc' not in res2:
+                    success = 1
+                    break
+            else:
+                if target+'_section_doc' not in res2:
+                    success = 1
+                    break
 
+        if role == 'Nurse':
+            cursor = connection.cursor()
+            nur = None
+            try:
+                cursor.execute("select nurse_id from Patients where object_id = %s", (i,))
+                nur = cursor.fetchall()[0][0]
+            finally:
+                cursor.close()
+            if nur == subject_id:
+                if target + '_personal_nurse' not in res2:
+                    success = 1
+                    break
+            else:
+                success = 1
+                break
+
+        if role == 'Employee':
+            if target not in res2:
+                success = 1
+                break
+
+    return success
 
 
 
