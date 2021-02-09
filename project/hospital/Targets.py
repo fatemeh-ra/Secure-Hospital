@@ -1,5 +1,4 @@
-from django.db import connection
-from hospital.Queries import is_manager
+from hospital.Queries import *
 
 def check_targets(query_from, query_where, target):
     """Output: 0 if all targets are valid, 1 otherwise"""
@@ -146,7 +145,6 @@ def target_check_patient(query_where, target, read_write, subject_id, role):
 
 
     for i in list(set(result_set) & set(result_set2)):
-        print("select target_type from object_targets where object_id = %s", (i))
         cursor = connection.cursor()
         try:
             cursor.execute("select target_type from object_targets where object_id = %s", (i))
@@ -159,7 +157,7 @@ def target_check_patient(query_where, target, read_write, subject_id, role):
             cursor.close()
             print(res2, target, role)
 
-        if is_manager(subject_id):
+        if is_manager(subject_id) or is_assistant(subject_id) or is_sec_manager(subject_id):
             if target in res2:
                 continue
 

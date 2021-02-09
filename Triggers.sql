@@ -231,10 +231,38 @@ create trigger del_manager before delete on Manager
  ----------------------------------------------------------------------------------------------
 -- System Manager
 
--- same as Manager
--- drop trigger insert_manager on System_Manager;
+create or replace function insert_sysmanager_func() RETURNS trigger AS $insert_manager$
+BEGIN
+	update subjects set rsl = 'TS'
+	where subject_id = new.manager_id;
+	
+	delete from subject_category where subject_id = new.manager_id;
+	insert into subject_category (subject_id, section_id) values
+	(new.manager_id, 101),
+	(new.manager_id, 102),
+	(new.manager_id, 103),
+	(new.manager_id, 104),
+	(new.manager_id, 105),
+	(new.manager_id, 201),
+	(new.manager_id, 202);
+
+	delete from target_assignment where subject_id = new.manager_id;
+	insert into target_assignment values 
+	(default, 'medical_staff_management', new.manager_id),
+	(default, 'official_staff_management', new.manager_id),
+	(default, 'bills', new.manager_id),
+	(default, 'annual_report', new.manager_id),
+	(default, 'report_handling', new.manager_id),
+	(default, 'debt_calculation', new.manager_id),
+	(default, 'patient_accounting', new.manager_id);
+
+	RETURN NEW;  
+END;
+$insert_manager$ LANGUAGE plpgsql;
+
+--drop trigger insert_manager on System_Manager;
 create trigger insert_manager before insert on System_Manager
-    FOR EACH ROW EXECUTE PROCEDURE insert_manager_func();
+    FOR EACH ROW EXECUTE PROCEDURE insert_sysmanager_func();
    
 create or replace function del_sysmanager_func() RETURNS trigger AS $del_sysmanager$
 BEGIN
@@ -318,6 +346,56 @@ create or replace function insert_admin_assist_func() RETURNS trigger AS $insert
 BEGIN
 	update subjects set rsl = 'TS'
 	where subject_id = new.assistant_id;
+
+	insert into subject_category (subject_id, section_id) values
+	(new.assistant_id, 105);
+
+	insert into target_assignment values 
+	(default, 'official_staff_management', new.assistant_id),
+	(default, 'bills', new.assistant_id),
+	(default, 'annual_report', new.assistant_id),
+	(default, 'report_handling', new.assistant_id),
+	(default, 'debt_calculation', new.assistant_id);
+
+	RETURN NEW;  
+END;
+$insert_admin_assist$ LANGUAGE plpgsql;
+
+drop trigger insert_admin_assist on Administrative_assistant;
+create trigger insert_admin_assist before insert on Administrative_assistant
+    FOR EACH ROW EXECUTE PROCEDURE insert_admin_assist_func();
+
+create or replace function del_assist_func() RETURNS trigger AS $del_assist$
+BEGIN
+	update subjects set rsl = 'S'
+	where subject_id = old.assistant_id;
+	
+	delete from subject_category where subject_id = old.assistant_id;
+	insert into subject_category (subject_id, section_id) values
+	(old.assistant_id, (select section_id from doctors where subject_id = old.assistant_id));
+
+	delete from target_assignment where subject_id = old.assistant_id;
+	insert into target_assignment values 
+	(default, 'checkup', old.assistant_id),
+	(default, 'prescribe', old.assistant_id),
+	(default, 'give_command', old.assistant_id),
+	(default, 'records', old.assistant_id);
+
+	return old;
+END;
+$del_assist$ LANGUAGE plpgsql;
+
+drop trigger del_admin_assist on Administrative_assistant;
+create trigger del_admin_assist before delete on Administrative_assistant
+    FOR EACH ROW EXECUTE PROCEDURE del_assist_func();
+      
+    
+----------------------------------------------------------------------------------------------
+-- Medical Assistant
+create or replace function insert_med_assist_func() RETURNS trigger AS $insert_med_assist$
+begin
+	update subjects set rsl = 'TS'
+	where subject_id = new.assistant_id;
 	
 	delete from subject_category where subject_id = new.assistant_id;
 	insert into subject_category (subject_id, section_id) values
@@ -333,64 +411,14 @@ BEGIN
 
 	RETURN NEW;  
 END;
-$insert_admin_assist$ LANGUAGE plpgsql;
-
-drop trigger insert_admin_assist on Administrative_assistant;
-create trigger insert_admin_assist before insert on Administrative_assistant
-    FOR EACH ROW EXECUTE PROCEDURE insert_admin_assist_func();
-
-create or replace function del_assist_func() RETURNS trigger AS $del_assist$
-BEGIN
-	update subjects set rsl = 'S'
-	where subject_id = old.assistant_id;
-
-	delete from subject_category where subject_id = old.assistant_id;
-	insert into subject_category (subject_id, section_id) values
-	(old.assistant_id, (select section_id from doctors where subject_id = old.assistant_id));
-
-	delete from target_assignment where subject_id = old.assistant_id;
-	insert into target_assignment values 
-	(default, 'checkup', old.assistant_id),
-	(default, 'prescribe', old.assistant_id),
-	(default, 'give_command', old.assistant_id),
-	(default, 'records', old.assistant_id);
-	
-	return old;
-END;
-$del_assist$ LANGUAGE plpgsql;
-
-drop trigger del_admin_assist on Administrative_assistant;
-create trigger del_admin_assist before delete on Administrative_assistant
-    FOR EACH ROW EXECUTE PROCEDURE del_assist_func();
-      
-    
-----------------------------------------------------------------------------------------------
--- Medical Assistant
-create or replace function insert_med_assist_func() RETURNS trigger AS $insert_med_assist$
-BEGIN
-	update subjects set rsl = 'TS'
-	where subject_id = new.assistant_id;
-	
-	insert into subject_category (subject_id, section_id) values
-	(new.assistant_id, 105);
-
-	insert into target_assignment values 
-	(default, 'official_staff_management', new.assistant_id),
-	(default, 'bills', new.assistant_id),
-	(default, 'annual_report', new.assistant_id),
-	(default, 'report_handling', new.assistant_id),
-	(default, 'debt_calculation', new.assistant_id);
-
-	RETURN NEW;  
-END;
 $insert_med_assist$ LANGUAGE plpgsql;
 
--- drop trigger insert_admin_assist on Medical_assistant;
+drop trigger insert_med_assist on Medical_assistant;
 create trigger insert_med_assist before insert on Medical_assistant
     FOR EACH ROW EXECUTE PROCEDURE insert_med_assist_func();
 
--- drop trigger del_med_assist on Medical_assistant;
-create trigger del_med_assist before insert on Medical_assistant
+drop trigger del_med_assist on Medical_assistant;
+create trigger del_med_assist before delete on Medical_assistant
     FOR EACH ROW EXECUTE PROCEDURE del_assist_func();
       
    

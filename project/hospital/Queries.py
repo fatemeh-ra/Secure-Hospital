@@ -214,6 +214,41 @@ def is_manager(subject_id):
     if result_set != []: return True
     return False
 
+def is_assistant(subject_id):
+    cursor = connection.cursor()
+    result_set = None
+    try:
+        cursor.execute("select * from Administrative_assistant where assistant_id = %s", (subject_id, ))
+        result_set = cursor.fetchall()
+    finally:
+        cursor.close()
+
+    if result_set != []: return True
+
+    cursor = connection.cursor()
+    result_set = None
+    try:
+        cursor.execute("select * from Medical_assistant where assistant_id = %s", (subject_id,))
+        result_set = cursor.fetchall()
+    finally:
+        cursor.close()
+
+    if result_set != []: return True
+    return False
+
+def is_sec_manager(subject_id):
+    cursor = connection.cursor()
+    result_set = None
+    try:
+        cursor.execute("select * from Section_Manager where manager_id = %s", (subject_id, ))
+        result_set = cursor.fetchall()
+    finally:
+        cursor.close()
+
+    if result_set != []: return True
+    return False
+
+
 def manager_read_query(Query):
     # print(Query)
     cursor = connection.cursor()
