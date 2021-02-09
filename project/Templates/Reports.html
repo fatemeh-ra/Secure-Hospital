@@ -4,22 +4,62 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>reports</title>
+
+    <style>
+
+        
+        body{
+            background: #bdc3c7;  /* fallback for old browsers */
+            background: -webkit-linear-gradient(to right, #2c3e50, #bdc3c7);  /* Chrome 10-25, Safari 5.1-6 */
+            background: linear-gradient(to right, #2c3e50, #bdc3c7); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+
+        }
+
+
+        .Btn3{
+        color: #000000;
+        font-size: larger;
+        font-family: 'Roboto Condensed', sans-serif ;
+        width: 400px;
+        height: 50px;
+        border-radius: 5px;
+        background: #169bbd;
+        box-shadow: 0px 1px 5px 1px #00000038, 0px 2px 5px 4px #8a858538;
+                }
+    </style>
+
+
+
+
+
 </head>
 <body>
 
-    <form method="POST" action="{% url 'submitreport' %}" id="submitreport" >
-        {% csrf_token %}
 
-            <input type="text" name="report" id="report">
+
+
+    <center>
+        <h1 style="padding-top: 80px;">Enter your report : </h1>
+
+    </center>
+    <center style="padding: 100px;">
+
+        <form style="top: 100px;" method="POST" action="{% url 'submitreport' %}" id="submitreport" >
+            {% csrf_token %}
+
+                <input style="width: 400px; height: 100px; " type="text" name="report" id="report">
+        
     
+                <input  class="Btn3" type="submit" value="submit">
+    
+                <input type="hidden" name="subjectID" id="subjectID" value="{{ subjectID }}">
+                <input type="hidden" name="object_id" id="object_id" value="{{ object_id }}">
+    
+        </form>
+     
+    </center>
 
-            <input type="submit" value="submitted">
-
-            <input type="hidden" name="subjectID" id="subjectID" value="{{ subjectID }}">
-            <input type="hidden" name="object_id" id="object_id" value="{{ object_id }}">
-
-    </form>
-
+   
 
 </body>
 </html>

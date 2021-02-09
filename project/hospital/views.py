@@ -29,21 +29,21 @@ def addpatient(request):
     
     preferness = []
     Doctor_preferences = request.POST.get('Doctor_preferences')
-    if  Doctor_preferences:
-        
-        preferness.append('checkup_personal_doc')
-        preferness.append('prescribe_personal_doc')
-        preferness.append('records_personal_doc')
+ 
+    preferness.append('checkup_personal_doc')
+    preferness.append('prescribe_personal_doc')
+    preferness.append('records_personal_doc')
     
     
     Nurses_preferences = request.POST.get('Nurses_preferences')
-    if  Nurses_preferences:
-        preferness.append('patient_care_personal_nurse')
+    
+    
+    preferness.append('patient_care_personal_nurse')
         
 
     accounting_preferences = request.POST.get('accounting_preferences')    
-    if accounting_preferences:
-        preferness.append('patient_accounting')
+    
+    preferness.append('patient_accounting')
         
 
 

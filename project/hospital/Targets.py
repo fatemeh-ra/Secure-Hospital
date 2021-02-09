@@ -6,6 +6,8 @@ def check_targets(query_from, query_where, target):
     cursor = connection.cursor()
     result_set = None
     success = 0
+    if (query_where == ''):
+        query_where = query_where + '1=1'
     try:
         Query = "select object_id from %s where %s" % (query_from, query_where,)
         cursor.execute(Query)
@@ -35,6 +37,8 @@ def log_access(query_from, query_where, target, subject_id, read_write):
     """Input read_write: 0 for raed Query, 1 for write query"""
     cursor = connection.cursor()
     result_set = None
+    if (query_where == ''):
+        query_where = query_where + '1=1'
     try:
         Query = "select object_id from %s where %s"%(query_from, query_where,)
         cursor.execute(Query)
@@ -80,6 +84,7 @@ def add_patient_targets(targets, subject_id):
     '''Input: a list of valid targets and id of newly added patient'''
     cursor = connection.cursor()
     object_id = None
+    
     try:
         Query = "select object_id from patients where subject_id=%s" % (subject_id,)
         cursor.execute(Query)
@@ -101,10 +106,13 @@ def add_patient_targets(targets, subject_id):
             cursor.close()
 
 def target_check_patient(query_where, target, read_write, subject_id, role):
+    role = role.lower()
     """Input read_write: 0 for raed Query, 1 for write query
     Output: 0 if all targets are valid, 1 otherwise"""
     success = 0
     cursor = connection.cursor()
+    if (query_where == ''):
+        query_where = query_where + '1=1'
     result_set = None
     try:
         Query = "select object_id from Patients where %s" % (query_where,)
@@ -138,10 +146,12 @@ def target_check_patient(query_where, target, read_write, subject_id, role):
 
 
     for i in list(set(result_set) & set(result_set2)):
+        print("select target_type from object_targets where object_id = %s", (i))
         cursor = connection.cursor()
         try:
             cursor.execute("select target_type from object_targets where object_id = %s", (i))
             res = cursor.fetchall()
+    
             res2 = []
             for l in res:
                 res2.append(l[0])

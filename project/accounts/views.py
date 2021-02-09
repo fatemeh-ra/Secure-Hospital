@@ -54,6 +54,10 @@ def logout(request):
         return render(request,'../Templates/home.html')
     
 def sentQuery(request):
+
+
+
+
         db_tables = ['Doctors','Nurses','Employees','Reports' , 'Patients']
         manager_db_tables = ['Sections', 'Subject_Category', 'Object_Category', 'Section_Manager', 'Manager',
                              'System_Manager', 'Administrative_assistant', 'Medical_assistant', 'Target_assignment',
@@ -64,10 +68,13 @@ def sentQuery(request):
             #FROM table_name
 
             #section for select queies 
+            if ('usrpoint' not in  request.POST.keys()):
+                return HttpResponse(error_message%'You can not send Query')
             User_query_target = request.POST['usrpoint']
             user_Id = request.POST['subjectID']
+            user_Id = int(user_Id)
             user_role = request.POST['Role']
-
+           
             if request.POST['sentQuery'][0:5].lower() == 'selec':
                 select_elements = re.findall(r'"(.+?)"',request.POST['sentQuery'])
                 selected_col = select_elements[0].strip().split(',')
@@ -104,7 +111,7 @@ def sentQuery(request):
                     else:
                         context['colName'] = selected_col
                     if (select_from == 'Patients'):
-
+                       
                         if (Targets.target_check_patient(select_where ,User_query_target , 0,user_Id , user_role ) == 0):
                             Targets.log_access(select_from ,select_where , User_query_target , user_Id , 0)
                             Query_response_list = Queries.read_query(main_Query , user_Id)
@@ -249,21 +256,30 @@ def sentQuery(request):
                 ins_col = insert_elements[1].strip().split(',')
                 ins_val = insert_elements[2].strip().split(',')
                 if (ins_table in db_tables):
+                    
                     main_Query = re.sub('["]' , '' , request.POST['sentQuery']) 
                     main_Query = re.sub('[;@#$!^&%-]' , '' , main_Query)   
+
                     if (Queries.check_table_clevel(ins_table,user_Id)[0][0]  and (Queries.insert_query_exec(main_Query) == 0)):
+                        
                         return HttpResponse('query done ')
                     else:
                         return HttpResponse('its not ok ')    
 
-                    
+                elif Queries.is_manager(user_Id) and ins_table in manager_db_tables:
+                    main_Query = re.sub('["]', '', request.POST['sentQuery'])
+                    main_Query = re.sub('[;@#$!^&%-]', '', main_Query)
+                    if( Queries.insert_query_exec(main_Query) == 0):
+                        return HttpResponse(success_message % 'Query Done Successfully')
+                    else:
+                        return HttpResponse(error_message % 'Query Syntax Error')
                 return HttpResponse('error : table not found')
 
-
+            
 
 def Myprivacy(request):
     user_object_id = request.POST['object_id']
-    my_privacy_list = Queries.my_privacy(46)
+    my_privacy_list = Queries.my_privacy(int(user_object_id))
     col_name = ['Subject_id' , 'access']
     context = {}
     context['colName'] = col_name
