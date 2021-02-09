@@ -96,7 +96,14 @@
               <div class="fade-out"></div>
             </div>
 
-            <button class="Btn2" id="MYPrivacy"> MY-Privacy </button>
+            <form method="POST" action="{% url 'Myprivacy' %}" id="Myprivacy">
+              {% csrf_token %}
+
+              <button class="Btn2" id="MYPrivacy"> MY-Privacy </button>
+
+
+
+            </form>
             {% if canAddPatients ==  True  %}
             <a href="../../RegisterPatients/?show=true"><button class="Btn2" id="PatientReception">Patient Reception</button></a>
 
