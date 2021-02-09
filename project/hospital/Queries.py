@@ -115,7 +115,7 @@ def register_patient(f_name, l_name, national_id, age, sex,
         print('bad Query')
     finally:
         cursor.close()
-        if(result != -1): user.save()
+        if(result == -1): user.delete()
         return result
 
 def export_data(subject_id):

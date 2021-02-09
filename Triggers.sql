@@ -53,6 +53,25 @@ $insert_doc$ LANGUAGE plpgsql;
 create trigger insert_doc before insert on Doctors
     FOR EACH ROW EXECUTE PROCEDURE insert_doc_func();
 
+   
+create or replace function del_user_func() RETURNS trigger AS $del_user$
+BEGIN
+	delete from subject_category sc where sc.subject_id = old.subject_id;
+	delete from object_category oc where oc.object_id = old.object_id;
+
+	delete from target_assignment ta where ta.subject_id = old.subject_id;
+	delete from object_targets ot where ot.object_id = old.object_id;
+
+	delete from auth_user where id = old.subject_id;
+
+	RETURN OLD;  
+END;
+$del_user$ LANGUAGE plpgsql;
+
+-- drop trigger del_doc on Doctors;
+create trigger del_doc after delete on Doctors
+    FOR EACH ROW EXECUTE PROCEDURE del_user_func();
+   
 ----------------------------------------------------------------------------------------------
 -- Nurse
 create or replace function insert_nurse_func() RETURNS trigger AS $insert_nurse$
@@ -62,7 +81,7 @@ BEGIN
 	insert into subject_category (subject_id, section_id)
 	values (new.subject_id, new.section_id);
 
-	update objects set asl = 'S', msl = 'TS', csl = 'S'
+	update objects set asl = 'S', msl = 'TS', csl = 'TS'
 	where object_id = new.object_id;
 	insert into object_category (object_id, section_id)
 	values (new.object_id , new.section_id);
@@ -88,7 +107,9 @@ $insert_nurse$ LANGUAGE plpgsql;
 create trigger insert_nurse before insert on Nurses
     FOR EACH ROW EXECUTE PROCEDURE insert_nurse_func();
 
-
+create trigger del_nurse after delete on Nurses
+    FOR EACH ROW EXECUTE PROCEDURE del_user_func();
+   
 ----------------------------------------------------------------------------------------------
 -- Employee
 create or replace function insert_emp_func() RETURNS trigger AS $insert_emp$
@@ -146,7 +167,9 @@ $insert_emp$ LANGUAGE plpgsql;
 create trigger insert_emp before insert on Employees
     FOR EACH ROW EXECUTE PROCEDURE insert_emp_func();
 
- 
+ create trigger del_emp after delete on Employees
+    FOR EACH ROW EXECUTE PROCEDURE del_user_func();
+   
  ----------------------------------------------------------------------------------------------
 -- Manager
 create or replace function insert_manager_func() RETURNS trigger AS $insert_manager$
@@ -169,7 +192,8 @@ BEGIN
 	(default, 'bills', new.manager_id),
 	(default, 'annual_report', new.manager_id),
 	(default, 'report_handling', new.manager_id),
-	(default, 'debt_calculation', new.manager_id);
+	(default, 'debt_calculation', new.manager_id),
+	(default, 'patient_accounting', new.manager_id);
 
 	RETURN NEW;  
 END;
@@ -252,7 +276,8 @@ BEGIN
 	where subject_id = new.manager_id;
 
 	insert into target_assignment values 
-	(default, 'medical_staff_management', new.manager_id);
+	(default, 'medical_staff_management', new.manager_id),
+	(default, 'patient_accounting', new.subject_id);
 
 	RETURN NEW;  
 END;
@@ -282,7 +307,7 @@ create trigger insert_sec_manager before insert on Section_Manager
 --$del_sec_manager$ LANGUAGE plpgsql;
 
 -- drop trigger del_sec_manager on Section_Manager;
-create trigger del_sec_manager before insert on Section_Manager
+create trigger del_sec_manager before delete on Section_Manager
     FOR EACH ROW EXECUTE PROCEDURE del_manager_func();
     
    
@@ -293,6 +318,7 @@ BEGIN
 	update subjects set rsl = 'TS'
 	where subject_id = new.assistant_id;
 	
+	delete from subject_category where subject_id = new.assistant_id;
 	insert into subject_category (subject_id, section_id) values
 	(new.assistant_id, 101),
 	(new.assistant_id, 102),
@@ -301,7 +327,8 @@ BEGIN
 
 	insert into target_assignment values 
 	(default, 'medical_staff_management', new.assistant_id),
-	(default, 'report_handling', new.assistant_id);
+	(default, 'report_handling', new.assistant_id),
+	(default, 'patient_accounting', new.assistant_id);
 
 	RETURN NEW;  
 END;
