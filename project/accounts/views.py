@@ -61,7 +61,7 @@ def sentQuery(request):
         db_tables = ['Doctors','Nurses','Employees','Reports' , 'Patients']
         manager_db_tables = ['Sections', 'Subject_Category', 'Object_Category', 'Section_Manager', 'Manager',
                              'System_Manager', 'Administrative_assistant', 'Medical_assistant', 'Target_assignment',
-                             'Object_Targets', 'Access_Log']
+                             'Object_Targets', 'Access_Log' , 'Subjects' , 'Objects']
 
         if request.method == 'POST':
             #SELECT column1, column2, ...
