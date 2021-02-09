@@ -1,5 +1,5 @@
 from django.db import connection
-
+from hospital.Queries import is_manager
 
 def check_targets(query_from, query_where, target):
     """Output: 0 if all targets are valid, 1 otherwise"""
@@ -147,8 +147,13 @@ def target_check_patient(query_where, target, read_write, subject_id, role):
                 res2.append(l[0])
         finally:
             cursor.close()
+            print(res2, target, role)
 
-        if role == 'Doctor':
+        if is_manager(subject_id):
+            if target in res2:
+                continue
+
+        if role == 'doctor':
             cursor = connection.cursor()
             doc = None
             try:
@@ -166,7 +171,7 @@ def target_check_patient(query_where, target, read_write, subject_id, role):
                     success = 1
                     break
 
-        if role == 'Nurse':
+        elif role == 'nurse':
             cursor = connection.cursor()
             nur = None
             try:
@@ -182,10 +187,14 @@ def target_check_patient(query_where, target, read_write, subject_id, role):
                 success = 1
                 break
 
-        if role == 'Employee':
+        elif role == 'employee':
             if target not in res2:
                 success = 1
                 break
+
+        else:
+            success = 1
+            break
 
     return success
 

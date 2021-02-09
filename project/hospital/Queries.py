@@ -17,15 +17,19 @@ def valid_targets(subject_id):
 
 # Needed??
 def write_access(subject_id):
-    '''Output: list of all objects this user has write access to them'''
+    '''Output: list of all objects this user has write access to them
+    or 1 if error happens'''
     cursor = connection.cursor()
     result_set = None
+    success = 0
     try:
         Query = "select * from write_access(%(id)S)"
         cursor.execute(Query, ({'id':subject_id}))
         result_set = cursor.fetchall()
+    except: success = 1
     finally:
         cursor.close()
+        if success: return success
         return result_set
 
 def write_query(Query, subject_id):
