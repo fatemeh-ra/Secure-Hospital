@@ -119,7 +119,7 @@ def register_patient(f_name, l_name, national_id, age, sex,
         return result
 
 def export_data(subject_id):
-    '''Output: user data : role, fname, lname, national_id, section'''
+    '''Output: user data : role, fname, lname, national_id, section, object_id'''
     cursor = connection.cursor()
     result_set = None
     try:
