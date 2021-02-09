@@ -422,7 +422,6 @@ create trigger del_med_assist before delete on Medical_assistant
     FOR EACH ROW EXECUTE PROCEDURE del_assist_func();
       
    
-   
 
 ----------------------------------------------------------------------------------------------
 -- command doctor on nurse
