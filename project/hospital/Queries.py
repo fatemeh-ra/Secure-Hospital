@@ -3,7 +3,6 @@ from django.contrib.auth.models import User
 import traceback
 
 
-
 def valid_targets(subject_id):
     '''Output: valid targets of this user'''
     cursor = connection.cursor()
@@ -48,7 +47,6 @@ def write_query(Query, subject_id):
         return success
 
 
-
 def insert_query_exec(Query):
     print(Query)
     cursor = connection.cursor()
@@ -61,8 +59,6 @@ def insert_query_exec(Query):
     finally:
         cursor.close()
         return success        
-
-
 
 
 def read_query(Query, subject_id):
@@ -104,7 +100,6 @@ def register_patient(f_name, l_name, national_id, age, sex,
     '''Input: patient info
         Output: subject_id if successful and -1 otherwise'''
     user = User.objects.create_user(username=user, password=passw)
-    user.save()
     cursor = connection.cursor()
     result = -1
     try:
@@ -120,6 +115,7 @@ def register_patient(f_name, l_name, national_id, age, sex,
         print('bad Query')
     finally:
         cursor.close()
+        if(result != -1): user.save()
         return result
 
 def export_data(subject_id):
@@ -214,8 +210,35 @@ def is_manager(subject_id):
     if result_set != []: return True
     return False
 
+def manager_read_query(Query):
+    print(Query)
+    cursor = connection.cursor()
+    result_set = None
+    success = 0
+    try:
+        cursor.execute(Query, ())
+        result_set = cursor.fetchall()
+    except:
+        success = 1
+        print(traceback.format_exc())
+    finally:
+        cursor.close()
+        if success: return success
+        return result_set
 
 
+def manager_write_query(Query):
+    print(Query)
+    cursor = connection.cursor()
+    success = 0
+    try:
+        cursor.execute(Query, ())
+    except:
+        success = 1
+        print(traceback.format_exc())
+    finally:
+        cursor.close()
+        return success
 
 
 
