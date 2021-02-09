@@ -107,7 +107,8 @@ $insert_nurse$ LANGUAGE plpgsql;
 create trigger insert_nurse before insert on Nurses
     FOR EACH ROW EXECUTE PROCEDURE insert_nurse_func();
 
-create trigger del_nurse after delete on Nurses
+drop trigger del_nurse on nurses 
+create trigger del_nurse before delete on Nurses
     FOR EACH ROW EXECUTE PROCEDURE del_user_func();
    
 ----------------------------------------------------------------------------------------------
@@ -334,7 +335,7 @@ BEGIN
 END;
 $insert_admin_assist$ LANGUAGE plpgsql;
 
--- drop trigger insert_admin_assist on Administrative_assistant;
+drop trigger insert_admin_assist on Administrative_assistant;
 create trigger insert_admin_assist before insert on Administrative_assistant
     FOR EACH ROW EXECUTE PROCEDURE insert_admin_assist_func();
 
@@ -345,7 +346,7 @@ BEGIN
 
 	delete from subject_category where subject_id = old.assistant_id;
 	insert into subject_category (subject_id, section_id) values
-	(old.assistant_id, (select "section" from doctors where subject_id = old.assistant_id));
+	(old.assistant_id, (select section_id from doctors where subject_id = old.assistant_id));
 
 	delete from target_assignment where subject_id = old.assistant_id;
 	insert into target_assignment values 
@@ -358,8 +359,8 @@ BEGIN
 END;
 $del_assist$ LANGUAGE plpgsql;
 
--- drop trigger del_admin_assist on Administrative_assistant;
-create trigger del_admin_assist before insert on Administrative_assistant
+drop trigger del_admin_assist on Administrative_assistant;
+create trigger del_admin_assist before delete on Administrative_assistant
     FOR EACH ROW EXECUTE PROCEDURE del_assist_func();
       
     
