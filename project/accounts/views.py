@@ -46,6 +46,9 @@ def logout(request):
     
 def sentQuery(request):
         db_tables = ['Doctors','Nurses','Employees','Reports' , 'Patients']
+        manager_db_tables = ['Sections', 'Subject_Category', 'Object_Category', 'Section_Manager', 'Manager',
+                             'System_Manager', 'Administrative_assistant', 'Medical_assistant', 'Target_assignment',
+                             'Object_Targets', 'Access_Log']
 
         if request.method == 'POST':
             #SELECT column1, column2, ...
@@ -61,7 +64,7 @@ def sentQuery(request):
                 selected_col = select_elements[0].strip().split(',')
                 select_from = select_elements[1].strip()
                 select_where = ''
-                
+                print('-------------------------------------------------------', select_from)
                 if (len(select_elements) > 2):
                     select_where = select_elements[2].strip()
                 if (select_from in db_tables):
@@ -94,8 +97,17 @@ def sentQuery(request):
 
                         else:
                                 return HttpResponse('<center style="padding-top: 300px;"><span style="font-size:100px;"">&#10060;</span><div style="background-color: rgb(37, 189, 209); width: 500px; height: 60px;  border-radius: 10px;"> <h1 style="font-family: "Roboto Condensed", sans-serif ;  padding-top: 10px;  "> Target did not match</h1></div></center>')
+                elif Queries.is_manager(user_Id) and select_from in manager_db_tables:
+                    main_Query = re.sub('["]', '', request.POST['sentQuery'])
+                    main_Query = re.sub('[;@#$!^&%-]', '', main_Query)
+                    Query_response_list = []
+                    context = {}
+                    context['colName'] = selected_col
+                    Query_response_list = Queries.manager_read_query(main_Query)
+                    context['QueryResults'] = Query_response_list
+                    return render(request, '../Templates/showResults.html', context)
                 else:
-                                return HttpResponse('<center style="padding-top: 300px;"><span style="font-size:100px;"">&#10060;</span><div style="background-color: rgb(37, 189, 209); width: 500px; height: 60px;  border-radius: 10px;"> <h1 style="font-family: "Roboto Condensed", sans-serif ;  padding-top: 10px;  "> Table not found in DB</h1></div></center>')
+                    return HttpResponse('<center style="padding-top: 300px;"><span style="font-size:100px;"">&#10060;</span><div style="background-color: rgb(37, 189, 209); width: 500px; height: 60px;  border-radius: 10px;"> <h1 style="font-family: "Roboto Condensed", sans-serif ;  padding-top: 10px;  "> Table not found in DB</h1></div></center>')
                     
 
             #DELETE FROM table_name WHERE condition;
@@ -130,6 +142,12 @@ def sentQuery(request):
 
                         else:
                                 return HttpResponse('<center style="padding-top: 300px;"><span style="font-size:100px;"">&#10060;</span><div style="background-color: rgb(37, 189, 209); width: 500px; height: 60px;  border-radius: 10px;"> <h1 style="font-family: "Roboto Condensed", sans-serif ;  padding-top: 10px;  "> Query failed</h1></div></center>')
+                elif Queries.is_manager(user_Id) and del_table in manager_db_tables:
+                    main_Query = re.sub('["]', '', request.POST['sentQuery'])
+                    main_Query = re.sub('[;@#$!^&%-]', '', main_Query)
+                    if( Queries.manager_write_query(main_Query) ):
+                        return HttpResponse('<center style="padding-top: 300px;"><span style="font-size:100px;"">&#9996;</span><div style="background-color: rgb(37, 189, 209); width: 500px; height: 60px;  border-radius: 10px;"> <h1 style="font-family: "Roboto Condensed", sans-serif ;  padding-top: 10px;  "> Query Done</h1></div></center>')
+
                 else:
                     return HttpResponse('<center style="padding-top: 300px;"><span style="font-size:100px;"">&#9996;</span><div style="background-color: rgb(37, 189, 209); width: 500px; height: 60px;  border-radius: 10px;"> <h1 style="font-family: "Roboto Condensed", sans-serif ;  padding-top: 10px;  "> Table not found </h1></div></center>')
 
@@ -166,6 +184,12 @@ def sentQuery(request):
                                 return HttpResponse('<center style="padding-top: 300px;"><span style="font-size:100px;"">&#9996;</span><div style="background-color: rgb(37, 189, 209); width: 500px; height: 60px;  border-radius: 10px;"> <h1 style="font-family: "Roboto Condensed", sans-serif ;  padding-top: 10px;  "> Query Done</h1></div></center>')
                         else: 
                                 return HttpResponse('<center style="padding-top: 300px;"><span style="font-size:100px;"">&#10060;</span><div style="background-color: rgb(37, 189, 209); width: 500px; height: 60px;  border-radius: 10px;"> <h1 style="font-family: "Roboto Condensed", sans-serif ;  padding-top: 10px;  "> Query failed</h1></div></center>')
+                elif Queries.is_manager(user_Id) and up_table in manager_db_tables:
+                    main_Query = re.sub('["]', '', request.POST['sentQuery'])
+                    main_Query = re.sub('[;@#$!^&%-]', '', main_Query)
+                    if( Queries.manager_write_query(main_Query) ):
+                        return HttpResponse('<center style="padding-top: 300px;"><span style="font-size:100px;"">&#9996;</span><div style="background-color: rgb(37, 189, 209); width: 500px; height: 60px;  border-radius: 10px;"> <h1 style="font-family: "Roboto Condensed", sans-serif ;  padding-top: 10px;  "> Query Done</h1></div></center>')
+
                 else:
                     return HttpResponse('<center style="padding-top: 300px;"><span style="font-size:100px;"">&#9996;</span><div style="background-color: rgb(37, 189, 209); width: 500px; height: 60px;  border-radius: 10px;"> <h1 style="font-family: "Roboto Condensed", sans-serif ;  padding-top: 10px;  "> Table not found </h1></div></center>')
 
