@@ -10,6 +10,8 @@ urlpatterns = [
     path('Myprivacy' , views.Myprivacy , name='Myprivacy'),
     path('Reports' , views.Reports , name='Reports'),
     path('submitreport' , views.submitreport , name='submitreport'),
+    
+    
 
    # path('signup/', views.signup, name='signup')
     ]

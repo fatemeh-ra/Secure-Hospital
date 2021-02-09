@@ -9,11 +9,11 @@ from hospital import Targets
 # Create your views here.
 error_message = """<center style="padding-top: 300px;"><span style="font-size:100px;"">&#10060;
 </span><div style="background-color: rgb(37, 189, 209); width: 500px; height: 60px;  border-radius: 10px;">
-<h1 style="font-family: "Roboto Condensed", sans-serif; padding-top: 10px;  "> %s</h1></div></center>')"""
+<h2 style="font-family: "Roboto Condensed", sans-serif; padding-top: 20px;  "> %s</h2></div></center>')"""
 
 success_message = """<center style="padding-top: 300px;"><span style="font-size:100px;"">&#9996;
 </span><div style="background-color: rgb(37, 189, 209); width: 500px; height: 60px;  border-radius: 10px;">
- <h1 style="font-family: "Roboto Condensed", sans-serif ;  padding-top: 10px;  "> %s</h1></div></center>'"""
+ <h2 style="font-family: "Roboto Condensed", sans-serif ;  padding-top: 20px;  "> %s</h2></div></center>'"""
 
 
 def login(request):
@@ -89,6 +89,17 @@ def sentQuery(request):
                         cols2 = []
                         for t in cols:
                             cols2.append(t[0])
+                        modified_select_col = ''
+                        counter = 0
+                        for l in cols2:
+                            counter = counter + 1
+                            if (counter < len(cols2)):
+                                modified_select_col = modified_select_col + l +','
+                            else:
+                                modified_select_col = modified_select_col + l
+                        if (select_where == ''):
+                            select_where = '1=1'        
+                        main_Query = 'select ' + modified_select_col + ' from ' + select_from + ' where ' + select_where   
                         context['colName'] = cols2
                     else:
                         context['colName'] = selected_col
