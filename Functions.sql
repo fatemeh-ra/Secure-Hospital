@@ -71,6 +71,9 @@ begin
 		select max(object_id), 201 from objects;
 	end if;
 	
+
+	insert into object_targets (target_type, object_id) 
+	select 'report_handling', max(object_id) from objects;
 	insert into reports (reporter_id, object_id, detail)
 	select subj_id, max(object_id), detail from objects;
 end
@@ -109,22 +112,22 @@ $$ LANGUAGE plpgsql;
 -- Export user data (name)
 
 
--- drop function export_data(int);
+drop function export_data(int);
 create or replace function export_data(id int)
-returns table(role varchar(255), f_name varchar(255), lname varchar(255), national_id int, section_id int)
+returns table(role varchar(255), f_name varchar(255), lname varchar(255), national_id int, section_id int, object_id int)
 as $$
 declare 
 	r varchar(20);
 begin 	
 	select s.role into r from subjects s where s.subject_id = $1;
 	if r = 'doctor' then
-		return query select r, d.f_name, d.l_name, d.national_id, d.section_id, object_id from doctors d where d.subject_id = $1;
+		return query select r, d.f_name, d.l_name, d.national_id, d.section_id, d.object_id from doctors d where d.subject_id = $1;
 	elseif r = 'nurse' then
-		return query select r, n.f_name, n.l_name, n.national_id, n.section_id, object_id from nurses n where n.subject_id = $1;
+		return query select r, n.f_name, n.l_name, n.national_id, n.section_id, n.object_id from nurses n where n.subject_id = $1;
 	elseif r = 'employee' then
-		return query select r, e.f_name, e.l_name, e.national_id, 105, object_id from employees e where e.subject_id = $1;
+		return query select r, e.f_name, e.l_name, e.national_id, 105, e.object_id from employees e where e.subject_id = $1;
 	elseif r = 'patient' then
-		return query select r, p.f_name, p.l_name, p.national_id, p.section_id, object_id from patients p where p.subject_id = $1;
+		return query select r, p.f_name, p.l_name, p.national_id, p.section_id, p.object_id from patients p where p.subject_id = $1;
 	end if;
 end
 $$ LANGUAGE plpgsql;	
