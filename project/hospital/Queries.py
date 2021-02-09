@@ -211,7 +211,7 @@ def is_manager(subject_id):
     return False
 
 def manager_read_query(Query):
-    print(Query)
+    # print(Query)
     cursor = connection.cursor()
     result_set = None
     success = 0
@@ -228,7 +228,7 @@ def manager_read_query(Query):
 
 
 def manager_write_query(Query):
-    print(Query)
+    # print(Query)
     cursor = connection.cursor()
     success = 0
     try:
@@ -241,7 +241,17 @@ def manager_write_query(Query):
         return success
 
 
-
+def culomn_names(table):
+    cursor = connection.cursor()
+    result_set = None
+    try:
+        cursor.execute('SELECT column_name FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = %s', (table.lower(), ))
+        result_set = cursor.fetchall()
+    except:
+        print(traceback.format_exc())
+    finally:
+        cursor.close()
+        return result_set
 
 
 
