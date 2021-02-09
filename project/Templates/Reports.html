@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>reports</title>
+</head>
+<body>
+
+    <form method="POST" action="{% url 'submitreport' %}" id="submitreport" >
+        {% csrf_token %}
+
+            <input type="text" name="report" id="report">
+    
+
+            <input type="submit" value="submitted">
+
+            <input type="hidden" name="subjectID" id="subjectID" value="{{ subjectID }}">
+            <input type="hidden" name="object_id" id="object_id" value="{{ object_id }}">
+
+    </form>
+
+
+</body>
+</html>

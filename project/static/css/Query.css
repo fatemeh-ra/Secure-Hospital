@@ -44,7 +44,7 @@ html, body, div, p, ul, li {
   .card {
     background: #fff;
     display: inline-block;
-    height: 500px;
+    height: 600px;
     margin: 1rem;
     position: relative;
     width: 1000px;
@@ -297,6 +297,15 @@ select option {
   }
 }
 
+
+
+.Btn3{
+  color: #000000;
+  width: 400px;
+  border-radius: 5px;
+  background: #ee2d0a;
+  box-shadow: 0px 1px 5px 1px #00000038, 0px 2px 5px 4px #8a858538;
+}
 
 .Btn2{
   color: #000000;
