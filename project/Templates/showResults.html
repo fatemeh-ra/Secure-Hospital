@@ -1,0 +1,66 @@
+{% load static %}
+
+
+
+
+{% block content %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Query Results</title>
+    <link rel="stylesheet" href="{% static 'css/showresults.css' %}">
+
+</head>
+<body>
+        <div style="width: 250px; height: 50px; background-color: #454647; border-radius: 5px; margin: 20px; ">
+     
+                <h2 style="font-family: 'Roboto Condensed', sans-serif ;  padding-top: 10px; padding-left:4px ; font-style: italic;"> Select Query Results</h2>
+
+
+
+        </div>
+
+    
+
+        <div class="tb">
+            
+            <table class="rwd-table">
+                
+                <tr>
+                    {% for a in colName %}
+    
+                    <td style="color: chocolate; font-weight: bolder;">{{a}}</td>
+                    {% endfor %}
+                </tr>
+                {% for a in QueryResults %}
+                <tr>
+                    {% for i in a %}
+    
+                    <td>{{i}}</td>
+                    {% endfor %}
+                </tr>
+                {% endfor %}
+            
+            </table>
+        </div>
+ 
+ 
+</body>    
+    
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+{% endblock content %}

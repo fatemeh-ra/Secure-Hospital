@@ -46,7 +46,7 @@ def logout(request):
     
 def sentQuery(request):
         db_tables = ['Doctors','Nurses','Employees','Reports' , 'Patients']
-        
+
         if request.method == 'POST':
             #SELECT column1, column2, ...
             #FROM table_name
@@ -61,6 +61,7 @@ def sentQuery(request):
                 selected_col = select_elements[0].strip().split(',')
                 select_from = select_elements[1].strip()
                 select_where = ''
+                
                 if (len(select_elements) > 2):
                     select_where = select_elements[2].strip()
                 if (select_from in db_tables):
@@ -69,21 +70,32 @@ def sentQuery(request):
                         main_Query = main_Query + 'where 1=1'
                     main_Query = re.sub('[;@#$!^&%-]' , '' , main_Query) 
                     #send query to check targets
+                    Query_response_list = []
+                    context = {}
+                    context['colName'] = selected_col
                     if (select_from == 'Patients'):
 
                         if (Targets.target_check_patient(select_where ,User_query_target , 0,user_Id , user_role ) == 0):
                             Targets.log_access(select_from ,select_where , User_query_target , user_Id , 0)
-                            return HttpResponse(Queries.read_query(main_Query , user_Id))
+                            Query_response_list = Queries.read_query(main_Query , user_Id)
+                            
+                            context['QueryResults'] = Query_response_list
+                            
+                            return render(request , '../Templates/showResults.html' , context)
+
                         else:
-                            return HttpResponse('error')    
+                                return HttpResponse('query failed')
                     elif (select_from != 'Patients'):
                         if ( Targets.check_targets(select_from ,select_where , User_query_target ) == 0):
                             Targets.log_access(select_from ,select_where , User_query_target , user_Id , 0)
-                            return HttpResponse(Queries.read_query(main_Query , user_Id))
+                            Query_response_list = Queries.read_query(main_Query , user_Id)
+                            context['QueryResults'] = Query_response_list
+                            return render(request , '../Templates/showResults.html' , context)
+
                         else:
-                            return HttpResponse('check did not ok ')    
+                                return HttpResponse('<center style="padding-top: 300px;"><span style="font-size:100px;"">&#10060;</span><div style="background-color: rgb(37, 189, 209); width: 500px; height: 60px;  border-radius: 10px;"> <h1 style="font-family: "Roboto Condensed", sans-serif ;  padding-top: 10px;  "> Target did not match</h1></div></center>')
                 else:
-                    return HttpResponse("Error : table name font find in DB")
+                                return HttpResponse('<center style="padding-top: 300px;"><span style="font-size:100px;"">&#10060;</span><div style="background-color: rgb(37, 189, 209); width: 500px; height: 60px;  border-radius: 10px;"> <h1 style="font-family: "Roboto Condensed", sans-serif ;  padding-top: 10px;  "> Table not found in DB</h1></div></center>')
                     
 
             #DELETE FROM table_name WHERE condition;
@@ -105,18 +117,21 @@ def sentQuery(request):
                     if (del_table != 'Patients' ):
                         if ( Targets.check_targets(del_table ,del_condition , User_query_target ) == 0):
                             Targets.log_access(del_table ,del_condition , User_query_target , user_Id , 1)
-         
-                            return HttpResponse(Queries.write_query(main_Query , user_Id))
+                            if (Queries.write_query(main_Query , user_Id) == 0):
+                                return HttpResponse('<center style="padding-top: 300px;"><span style="font-size:100px;"">&#9996;</span><div style="background-color: rgb(37, 189, 209); width: 500px; height: 60px;  border-radius: 10px;"> <h1 style="font-family: "Roboto Condensed", sans-serif ;  padding-top: 10px;  "> Query Done</h1></div></center>')
+                            
                         else:
-                            return HttpResponse('check is not ok ')  
+                                return HttpResponse('<center style="padding-top: 300px;"><span style="font-size:100px;"">&#10060;</span><div style="background-color: rgb(37, 189, 209); width: 500px; height: 60px;  border-radius: 10px;"> <h1 style="font-family: "Roboto Condensed", sans-serif ;  padding-top: 10px;  "> Query failed</h1></div></center>')
                     elif (del_table == 'Patients'):
                         if (Targets.target_check_patient(del_condition ,User_query_target , 1, user_Id , user_role ) == 0):
                             Targets.log_access(del_table ,del_condition , User_query_target , user_Id , 1)
-                            return HttpResponse(Queries.write_query(main_Query , user_Id))
+                            if (Queries.write_query(main_Query , user_Id) == 0):
+                                return HttpResponse('<center style="padding-top: 300px;"><span style="font-size:100px;"">&#9996;</span><div style="background-color: rgb(37, 189, 209); width: 500px; height: 60px;  border-radius: 10px;"> <h1 style="font-family: "Roboto Condensed", sans-serif ;  padding-top: 10px;  "> Query Done</h1></div></center>')
+
                         else:
-                            return HttpResponse('error ')                       
+                                return HttpResponse('<center style="padding-top: 300px;"><span style="font-size:100px;"">&#10060;</span><div style="background-color: rgb(37, 189, 209); width: 500px; height: 60px;  border-radius: 10px;"> <h1 style="font-family: "Roboto Condensed", sans-serif ;  padding-top: 10px;  "> Query failed</h1></div></center>')
                 else:
-                    return HttpResponse('Error : bad query ')
+                    return HttpResponse('<center style="padding-top: 300px;"><span style="font-size:100px;"">&#9996;</span><div style="background-color: rgb(37, 189, 209); width: 500px; height: 60px;  border-radius: 10px;"> <h1 style="font-family: "Roboto Condensed", sans-serif ;  padding-top: 10px;  "> Table not found </h1></div></center>')
 
             # UPDATE table_name
             #  SET column1 = value1, column2 = value2, ...
@@ -140,17 +155,19 @@ def sentQuery(request):
                     if (up_table != 'Patients'):
                         if ( Targets.check_targets(up_table ,up_condition , User_query_target ) == 0):
                             Targets.log_access(up_table ,up_condition , User_query_target , user_Id , 1)
-                            return HttpResponse(Queries.write_query(main_Query , user_Id))
+                            if (Queries.write_query(main_Query , user_Id) == 0):
+                                return HttpResponse('<center style="padding-top: 300px;"><span style="font-size:100px;"">&#9996;</span><div style="background-color: rgb(37, 189, 209); width: 500px; height: 60px;  border-radius: 10px;"> <h1 style="font-family: "Roboto Condensed", sans-serif ;  padding-top: 10px;  "> Query Done</h1></div></center>')
                         else:
-                            return HttpResponse('it s not ok')
+                                return HttpResponse('<center style="padding-top: 300px;"><span style="font-size:100px;"">&#10060;</span><div style="background-color: rgb(37, 189, 209); width: 500px; height: 60px;  border-radius: 10px;"> <h1 style="font-family: "Roboto Condensed", sans-serif ;  padding-top: 10px;  "> Query failed</h1></div></center>')
                     elif(up_table == 'Patients'):
                         if (Targets.target_check_patient(up_condition,User_query_target,1,user_Id,user_role) == 0):
                             Targets.log_access(up_table ,up_condition , User_query_target , user_Id , 1)
-                            return HttpResponse(Queries.write_query(main_Query , user_Id))
+                            if (Queries.write_query(main_Query , user_Id) == 0):
+                                return HttpResponse('<center style="padding-top: 300px;"><span style="font-size:100px;"">&#9996;</span><div style="background-color: rgb(37, 189, 209); width: 500px; height: 60px;  border-radius: 10px;"> <h1 style="font-family: "Roboto Condensed", sans-serif ;  padding-top: 10px;  "> Query Done</h1></div></center>')
                         else: 
-                            return HttpResponse('error')                       
+                                return HttpResponse('<center style="padding-top: 300px;"><span style="font-size:100px;"">&#10060;</span><div style="background-color: rgb(37, 189, 209); width: 500px; height: 60px;  border-radius: 10px;"> <h1 style="font-family: "Roboto Condensed", sans-serif ;  padding-top: 10px;  "> Query failed</h1></div></center>')
                 else:
-                    return HttpResponse('error : table not found ')
+                    return HttpResponse('<center style="padding-top: 300px;"><span style="font-size:100px;"">&#9996;</span><div style="background-color: rgb(37, 189, 209); width: 500px; height: 60px;  border-radius: 10px;"> <h1 style="font-family: "Roboto Condensed", sans-serif ;  padding-top: 10px;  "> Table not found </h1></div></center>')
 
 
 
