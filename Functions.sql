@@ -96,7 +96,7 @@ begin
 	where subject_id = id;
 	insert into subject_category (subject_id, section_id) values (id, section_id);
 	
-	insert into patients values (id, o, f_name, l_name, national_id,
+	insert into patients values (default, id, o, f_name, l_name, national_id,
 	"age", sex, illness, section_id, drugs, doctor_id, nurse_id);
 end
 $$ LANGUAGE plpgsql;
@@ -118,13 +118,13 @@ declare
 begin 	
 	select s.role into r from subjects s where s.subject_id = $1;
 	if r = 'doctor' then
-		return query select r, d.f_name, d.l_name, d.national_id, d.section_id from doctors d where d.subject_id = $1;
+		return query select r, d.f_name, d.l_name, d.national_id, d.section_id, object_id from doctors d where d.subject_id = $1;
 	elseif r = 'nurse' then
-		return query select r, n.f_name, n.l_name, n.national_id, n.section_id from nurses n where n.subject_id = $1;
+		return query select r, n.f_name, n.l_name, n.national_id, n.section_id, object_id from nurses n where n.subject_id = $1;
 	elseif r = 'employee' then
-		return query select r, e.f_name, e.l_name, e.national_id, 105 from employees e where e.subject_id = $1;
+		return query select r, e.f_name, e.l_name, e.national_id, 105, object_id from employees e where e.subject_id = $1;
 	elseif r = 'patient' then
-		return query select r, p.f_name, p.l_name, p.national_id, p.section_id from patients p where p.subject_id = $1;
+		return query select r, p.f_name, p.l_name, p.national_id, p.section_id, object_id from patients p where p.subject_id = $1;
 	end if;
 end
 $$ LANGUAGE plpgsql;	
