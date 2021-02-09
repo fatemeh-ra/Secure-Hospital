@@ -385,15 +385,14 @@ BEGIN
 END;
 $insert_med_assist$ LANGUAGE plpgsql;
 
--- drop trigger insert_admin_assist on Medical_assistant;
+drop trigger insert_med_assist on Medical_assistant;
 create trigger insert_med_assist before insert on Medical_assistant
     FOR EACH ROW EXECUTE PROCEDURE insert_med_assist_func();
 
--- drop trigger del_med_assist on Medical_assistant;
-create trigger del_med_assist before insert on Medical_assistant
+drop trigger del_med_assist on Medical_assistant;
+create trigger del_med_assist before delete on Medical_assistant
     FOR EACH ROW EXECUTE PROCEDURE del_assist_func();
       
-   
    
 
 ----------------------------------------------------------------------------------------------
