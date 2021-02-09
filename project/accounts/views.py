@@ -28,7 +28,7 @@ def login(request):
             context['Fname'] = user_extra_data[2]
             context['nationalID'] = user_extra_data[3]
             context['SectionId'] = user_extra_data[4]
-            
+            context['objectid'] = user_extra_data[5]
             context['valid_targets'] = valid_targets
             auth.login(request, user)
             # . . . 
@@ -64,6 +64,7 @@ def sentQuery(request):
                 selected_col = select_elements[0].strip().split(',')
                 select_from = select_elements[1].strip()
                 select_where = ''
+                
                 print('-------------------------------------------------------', select_from)
                 if (len(select_elements) > 2):
                     select_where = select_elements[2].strip()
@@ -220,4 +221,30 @@ def sentQuery(request):
 
 
 def Myprivacy(request):
-    return HttpResponse('HttpResponse')
+    user_object_id = request.POST['object_id']
+    my_privacy_list = Queries.my_privacy(46)
+    col_name = ['Subject_id' , 'access']
+    context = {}
+    context['colName'] = col_name
+
+    context['QueryResults'] = my_privacy_list
+    return render(request, '../Templates/showResults.html' ,context )
+
+
+def Reports(request):
+    context = {}
+    context['object_id'] = request.POST['object_id']
+    context['subjectID'] = request.POST['subjectID']
+
+    return render(request , '../Templates/Reports.html' , context)
+
+
+def submitreport(request):
+    report_text = request.POST['report']
+    object_id = request.POST['object_id']
+    subjectID = request.POST['subjectID']
+    
+    if(Queries.add_report(subjectID , object_id , report_text) == 0):
+       return HttpResponse('<center style="padding-top: 300px;"><span style="font-size:100px;"">&#9996;</span><div style="background-color: rgb(37, 189, 209); width: 500px; height: 60px;  border-radius: 10px;"> <h1 style="font-family: "Roboto Condensed", sans-serif ;  padding-top: 10px;  "> Report added successfully </h1></div></center>') 
+    else:
+       return HttpResponse('<center style="padding-top: 300px;"><span style="font-size:100px;"">&#10060;</span><div style="background-color: rgb(37, 189, 209); width: 500px; height: 60px;  border-radius: 10px;"> <h1 style="font-family: "Roboto Condensed", sans-serif ;  padding-top: 10px;  "> Report add did not successfully </h1></div></center>')                           

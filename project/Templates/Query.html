@@ -37,6 +37,8 @@
               <p class="valids">Family name : {{Fname}} </p>
               <p class="valids">Nationnal ID  : {{nationalID}} </p>
               <p class="valids"> Section ID  : {{SectionId}} </p>
+              <p class="valids"> object ID  : {{objectid}} </p>
+              
           </div>
 
         </ul>
@@ -98,12 +100,24 @@
 
             <form method="POST" action="{% url 'Myprivacy' %}" id="Myprivacy">
               {% csrf_token %}
+              <input type="hidden" name="object_id" id="object_id" value="{{ objectid }}">
 
               <button class="Btn2" id="MYPrivacy"> MY-Privacy </button>
 
 
 
             </form>
+
+            <form method="POST" action="{% url 'Reports' %}" id="Reports">
+              {% csrf_token %}
+              <input type="hidden" name="object_id" id="object_id" value="{{ objectid }}">
+              <input type="hidden" name="subjectID" id="subjectID" value="{{ id }}">
+              <button class="Btn3"  id="Reports"> Report </button>
+            </form>
+
+
+
+
             {% if canAddPatients ==  True  %}
             <a href="../../RegisterPatients/?show=true"><button class="Btn2" id="PatientReception">Patient Reception</button></a>
 
@@ -120,6 +134,7 @@
     <button class="Btn1" id="select"> Select </button>
     <button class="Btn1" id="insert"> Insert </button>
     </center>
+    
     
       </body>
 </html>
