@@ -81,7 +81,7 @@ BEGIN
 	insert into subject_category (subject_id, section_id)
 	values (new.subject_id, new.section_id);
 
-	update objects set asl = 'S', msl = 'TS', csl = 'TS'
+	update objects set asl = 'TS', msl = 'TS', csl = 'S'
 	where object_id = new.object_id;
 	insert into object_category (object_id, section_id)
 	values (new.object_id , new.section_id);
@@ -306,7 +306,7 @@ BEGIN
 
 	insert into target_assignment values 
 	(default, 'medical_staff_management', new.manager_id),
-	(default, 'patient_accounting', new.subject_id);
+	(default, 'patient_accounting', new.manager_id);
 
 	RETURN NEW;  
 END;

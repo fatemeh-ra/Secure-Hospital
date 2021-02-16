@@ -15,7 +15,7 @@ begin
 		return 1;
 	elseif f = 'U' and s = 'U' then 
 		return 1;
-	else 
+	else then 
 		return 0;
 	end if;
 end

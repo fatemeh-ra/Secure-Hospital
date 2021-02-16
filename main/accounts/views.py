@@ -54,27 +54,20 @@ def logout(request):
         return render(request,'../Templates/home.html')
     
 def sentQuery(request):
-
-
-
-
         db_tables = ['Doctors','Nurses','Employees','Reports' , 'Patients']
         manager_db_tables = ['Sections', 'Subject_Category', 'Object_Category', 'Section_Manager', 'Manager',
                              'System_Manager', 'Administrative_assistant', 'Medical_assistant', 'Target_assignment',
-                             'Object_Targets', 'Access_Log' , 'Subjects' , 'Objects']
+                             'Object_Targets', 'Access_Log']
 
         if request.method == 'POST':
             #SELECT column1, column2, ...
             #FROM table_name
 
             #section for select queies 
-            if ('usrpoint' not in  request.POST.keys()):
-                return HttpResponse(error_message%'You can not send Query')
             User_query_target = request.POST['usrpoint']
             user_Id = request.POST['subjectID']
-            user_Id = int(user_Id)
             user_role = request.POST['Role']
-           
+
             if request.POST['sentQuery'][0:5].lower() == 'selec':
                 select_elements = re.findall(r'"(.+?)"',request.POST['sentQuery'])
                 selected_col = select_elements[0].strip().split(',')
@@ -111,7 +104,7 @@ def sentQuery(request):
                     else:
                         context['colName'] = selected_col
                     if (select_from == 'Patients'):
-                       
+
                         if (Targets.target_check_patient(select_where ,User_query_target , 0,user_Id , user_role ) == 0):
                             Targets.log_access(select_from ,select_where , User_query_target , user_Id , 0)
                             Query_response_list = Queries.read_query(main_Query , user_Id)
@@ -140,7 +133,25 @@ def sentQuery(request):
                     main_Query = re.sub('[;@#$!^&%-]', '', main_Query)
                     Query_response_list = []
                     context = {}
-                    context['colName'] = selected_col
+                    if selected_col[0] == '*':
+                        cols = Queries.culomn_names(select_from)
+                        cols2 = []
+                        for t in cols:
+                            cols2.append(t[0])
+                        modified_select_col = ''
+                        counter = 0
+                        for l in cols2:
+                            counter = counter + 1
+                            if (counter < len(cols2)):
+                                modified_select_col = modified_select_col + l + ','
+                            else:
+                                modified_select_col = modified_select_col + l
+                        if (select_where == ''):
+                            select_where = '1=1'
+                        main_Query = 'select ' + modified_select_col + ' from ' + select_from + ' where ' + select_where
+                        context['colName'] = cols2
+                    else:
+                        context['colName'] = selected_col
                     Query_response_list = Queries.manager_read_query(main_Query)
                     if (Query_response_list == 1):
                         return HttpResponse(error_message % 'Query Syntax Error')
@@ -275,7 +286,7 @@ def sentQuery(request):
                         return HttpResponse(error_message % 'Query Syntax Error')
                 return HttpResponse('error : table not found')
 
-            
+
 
 def Myprivacy(request):
     user_object_id = request.POST['object_id']

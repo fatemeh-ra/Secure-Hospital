@@ -177,8 +177,8 @@ def my_privacy(object_id):
 
 
 def check_table_clevel(t_name , subject_id):
-    db_tables = {'Doctors':('TS', 'TS', 'S'),'Nurses':('S', 'TS', 'S'),
-                 'Employees':('TS', 'TS', 'S'),'Reports':('TS', 'TS', 'S')} # TODO: these values must be edited
+    db_tables = {'Doctors':('TS', 'TS', 'S'),'Nurses':('TS', 'TS', 'S'),
+                 'Employees':('TS', 'TS', 'S'),'Reports':('U', 'U', 'U')} # TODO: these values must be edited
     cursor = connection.cursor()
     result_set = None
     try:

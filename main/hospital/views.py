@@ -5,6 +5,17 @@ from hospital.Targets import *
  # Create your views here.
 
 
+error_message = """<center style="padding-top: 300px;"><span style="font-size:100px;"">&#10060;
+</span><div style="background-color: rgb(37, 189, 209); width: 500px; height: 60px;  border-radius: 10px;">
+<h2 style="font-family: "Roboto Condensed", sans-serif; padding-top: 20px;  "> %s</h2></div></center>')"""
+
+success_message = """<center style="padding-top: 300px;"><span style="font-size:100px;"">&#9996;
+</span><div style="background-color: rgb(37, 189, 209); width: 500px; height: 60px;  border-radius: 10px;">
+ <h2 style="font-family: "Roboto Condensed", sans-serif ;  padding-top: 20px;  "> %s</h2></div></center>'"""
+
+
+
+
 def Register(request):
     if not request.GET.get('show', False):
         print("sorry ")
@@ -66,7 +77,7 @@ def addpatient(request):
          
     subject_id = register_patient(name,lname,int(national_Id) , int(age) , sex , illness , int(section_ID) , Prescribed_d , int(Doctor_id) , int(Nurse_id) , username , password )
     if ( subject_id== -1):
-         return HttpResponse('error')
+         return HttpResponse(error_message% 'cant addd to patients ')
     else:
          add_patient_targets(preferness ,subject_id )
-         return HttpResponse('it is ok')
+         return HttpResponse(success_message%'patient added successfully')
